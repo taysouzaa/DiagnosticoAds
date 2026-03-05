@@ -3,7 +3,6 @@ import { AnalysisSection } from "./components/AnalysisSection";
 import { AuthoritySection } from "./components/AuthoritySection";
 import { ScarcitySection } from "./components/ScarcitySection";
 import { FormSection } from "./components/FormSection";
-import { FinalCTASection } from "./components/FinalCTASection";
 
 export default function App() {
   return (
@@ -22,9 +21,6 @@ export default function App() {
 
       {/* Bloco 6 – Formulário Estratégico */}
       <FormSection />
-
-      {/* Bloco 7 – CTA Final */}
-      <FinalCTASection />
 
       {/* Footer minimal */}
       <footer
