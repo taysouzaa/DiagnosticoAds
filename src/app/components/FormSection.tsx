@@ -14,6 +14,7 @@ const marketplaceOptions = [
 
 export function FormSection() {
   const calendlyUrl = "https://calendly.com/d/cvcd-znk-74n/analise-de-ads?month=2026-03";
+  const webhookUrl = "https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
@@ -36,10 +37,53 @@ export function FormSection() {
     return value;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    window.location.href = calendlyUrl;
+    try {
+      const now = new Date();
+      const date = now.toLocaleDateString("pt-BR");
+      const time = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+
+      const payload = {
+        "Nome completo ": name,
+        "E-mail": email,
+        "WhatsApp": whatsapp,
+        "Data de entrada de leads": date,
+        "Data": date,
+        "Hora": time,
+        "Funil": "DiagnosticoAds",
+      };
+
+
+      const body = JSON.stringify(payload);
+
+      // Tenta enviar mesmo durante navegação (mais confiável no redirect)
+      let sent = false;
+      if (navigator.sendBeacon) {
+        sent = navigator.sendBeacon(
+          webhookUrl,
+          new Blob([body], { type: "text/plain;charset=UTF-8" })
+        );
+      }
+
+      if (!sent) {
+        await Promise.race([
+          fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=UTF-8" },
+            body,
+            mode: "no-cors",
+            keepalive: true,
+          }),
+          new Promise((resolve) => setTimeout(resolve, 1200)),
+        ]);
+      }
+    } catch {
+      // Mesmo se falhar, seguimos o fluxo para o agendamento.
+    } finally {
+      window.location.href = calendlyUrl;
+    }
   };
 
   const inputStyle: React.CSSProperties = {
