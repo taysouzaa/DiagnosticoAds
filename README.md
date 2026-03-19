@@ -40,6 +40,8 @@ npm run dev
 npm run build
 ```
 
+> Observação: o `postbuild` copia `dist/ads.html` para `dist/index.html` para compatibilidade com hospedagens que exigem `index.html` (ex.: Vercel).
+
 ## Preview do Build
 ```bash
 npx vite preview

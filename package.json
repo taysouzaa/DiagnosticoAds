@@ -7,7 +7,7 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "postbuild": "node -e \"const fs=require('fs'); if (fs.existsSync('dist/index.html')) fs.unlinkSync('dist/index.html');\""
+    "postbuild": "node -e \"const fs=require('fs'); const src='dist/ads.html'; const dest='dist/index.html'; if (fs.existsSync(src)) fs.copyFileSync(src, dest);\""
   },
   "dependencies": {
     "react": "18.3.1",
