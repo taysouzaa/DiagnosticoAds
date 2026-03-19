@@ -1,5 +1,7 @@
+/* Tokens de tema e regras base da landing page. */
 @custom-variant dark (&:is(.dark *));
 
+/* Paleta principal e variáveis de UI. */
 :root {
   --font-size: 16px;
   --lp-bg: #1c242d;
@@ -51,6 +53,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
+/* Variante para modo escuro (se habilitado). */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -88,6 +91,7 @@
   --sidebar-ring: oklch(0.439 0 0);
 }
 
+/* Mapeamento das variáveis para o sistema de tema do Tailwind v4. */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -129,6 +133,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+/* Estilos base e resets semânticos. */
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -141,9 +146,9 @@
   }
 
   /**
-  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
-  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
-  */
+   * Tipografia padrão para elementos HTML (h1-h4, p, label, button, input).
+   * Mantida em @layer base para permitir override via utilitários do Tailwind.
+   */
 
   html {
     font-size: var(--font-size);

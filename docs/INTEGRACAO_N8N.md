@@ -1,4 +1,4 @@
-# Integração DiagnósticoAds → n8n → Google Sheets
+# Integração DiagnósticoAds → n8n → Google Sheets (Leads e Tracking)
 
 **Data:** 05/03/2026  
 **Projeto:** DiagnósticoAds  
@@ -7,7 +7,7 @@
 ---
 
 ## 1) Objetivo
-Registrar automaticamente os dados do formulário da landing page **DiagnósticoAds** em uma planilha do Google Sheets via **n8n**, garantindo:
+Registrar automaticamente os dados do formulário e eventos de tracking da landing page **DiagnósticoAds** em planilhas do Google Sheets via **n8n**, garantindo:
 - Padronização dos campos
 - Funil preenchido automaticamente
 - Data e hora em formato brasileiro
@@ -25,20 +25,40 @@ n8n Webhook (/webhook/DiagnosticoAds)
 Code Node (Parse Body + Normalização)
    ↓
 Google Sheets (Append Row)
+
+Landing Page (Tracking)
+   ↓ POST
+n8n Webhook (/webhook/DiagnosticoAdsTracking)
+   ↓
+Code Node (Normalização / Serialização de data)
+   ↓
+Google Sheets (Append Row - Tracking)
 ```
 
 ---
 
-## 3) Endpoint de Webhook
+## 3) Endpoints de Webhook
 
-### Produção
+### Leads (Formulário)
+**Produção**
 ```
 https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 ```
 
-### Teste (apenas quando o fluxo está em execução manual)
+**Teste (apenas quando o fluxo está em execução manual)**
 ```
 https://n8n.srv1095468.hstgr.cloud/webhook-test/DiagnosticoAds
+```
+
+### Tracking (Eventos)
+**Produção**
+```
+https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAdsTracking
+```
+
+**Teste (apenas quando o fluxo está em execução manual)**
+```
+https://n8n.srv1095468.hstgr.cloud/webhook-test/DiagnosticoAdsTracking
 ```
 
 > **Importante:** o endpoint `/webhook-test` não funciona em produção.
@@ -62,6 +82,33 @@ A landing page envia os dados com os **mesmos nomes das colunas** da planilha:
 ```
 
 > **Obs.:** a coluna “Nome completo ” possui **espaço no final**, por isso o payload mantém o mesmo nome.
+
+---
+
+## 4.1) Payload de Tracking (Eventos)
+
+O serviço de tracking envia eventos padronizados para o webhook de tracking:
+
+```json
+{
+  "event": "page_load",
+  "ts": "2026-03-19T10:12:45.000-03:00",
+  "url": "https://seudominio.com/ads.html",
+  "path": "/ads.html",
+  "referrer": "https://google.com/",
+  "utm": {
+    "utm_source": "google",
+    "utm_medium": "cpc",
+    "utm_campaign": "mar2026",
+    "utm_content": "banner"
+  },
+  "data": {
+    "location": "hero"
+  }
+}
+```
+
+> **Observação:** para gravar o campo `data` no Google Sheets, recomenda-se serializar em JSON no Code Node (ex.: `JSON.stringify($json.data)`).
 
 ---
 
@@ -139,14 +186,55 @@ return [{ json: data }];
 
 ---
 
+## 6.1) Google Sheets (Tracking)
+
+**Aba recomendada:** `Tracking`  
+**Operação:** `append`
+
+### Colunas necessárias
+- `event`
+- `ts`
+- `url`
+- `path`
+- `referrer`
+- `utm_source`
+- `utm_medium`
+- `utm_campaign`
+- `utm_content`
+- `data`
+
+### Mapeamento recomendado (Define Below)
+```text
+"event"       → {{$json["event"]}}
+"ts"          → {{$json["ts"]}}
+"url"         → {{$json["url"]}}
+"path"        → {{$json["path"]}}
+"referrer"    → {{$json["referrer"]}}
+"utm_source"  → {{$json["utm"]["utm_source"]}}
+"utm_medium"  → {{$json["utm"]["utm_medium"]}}
+"utm_campaign"→ {{$json["utm"]["utm_campaign"]}}
+"utm_content" → {{$json["utm"]["utm_content"]}}
+"data"        → {{JSON.stringify($json["data"])}}
+```
+
+> **Nota:** caso o node de Code normalize os campos, ajuste o mapeamento para o formato final.
+
+---
+
 ## 7) Configuração no Front-end
 
-No front-end, o payload é disparado **antes** do redirecionamento ao Calendly.
+No front-end, o payload é disparado **antes** do redirecionamento ao Google Calendar.
 O envio é feito em **text/plain** para evitar bloqueio de CORS.
 
 ### Endpoint de produção
 ```
 https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
+```
+
+### Tracking (eventos)
+Definir a variável de ambiente abaixo no `.env` (local) ou no provedor de deploy:
+```
+VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAdsTracking
 ```
 
 ### Payload enviado (resumo)
@@ -162,6 +250,10 @@ https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 }
 ```
 
+> Implementação no front-end:
+> - Leads: `src/components/sections/FormSection.tsx`
+> - Tracking: `src/services/tracking.ts`
+
 ---
 
 ## 8) Checklist de Produção
@@ -170,7 +262,10 @@ https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 2. URL correta no front-end: `/webhook/DiagnosticoAds`.
 3. Node Google Sheets em **append** (não update).
 4. Colunas do Sheets com nomes **idênticos** ao payload.
-5. Deploy atualizado no Vercel.
+5. Workflow de tracking **ativado** no n8n.
+6. Variável `VITE_TRACKING_WEBHOOK_URL` configurada.
+7. Aba `Tracking` com colunas corretas.
+8. Deploy atualizado no Vercel.
 
 ---
 
@@ -192,6 +287,11 @@ Confirme:
 ### ✅ Erro “A 'json' property isn't an object”
 O Code Node está retornando algo que não é objeto.
 Use `return [{ json: data }];` sempre.
+
+### ✅ Tracking cria colunas repetidas no final da planilha
+Causa: os nomes da linha 1 **não batem exatamente** com o payload.
+Confirme que a aba `Tracking` possui:
+`event`, `ts`, `url`, `path`, `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `data`.
 
 ---
 

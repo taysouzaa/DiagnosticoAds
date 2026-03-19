@@ -14,7 +14,8 @@ proposta → autoridade → explicação → escassez → formulário → agrade
 - Seção “O que será analisado” com pontos claros e objetivos
 - Área de autoridade com especialistas e marketplaces atendidos
 - Vídeo explicativo com capa personalizada
-- Formulário com redirecionamento ao Calendly
+- Formulário com redirecionamento ao Google Calendar
+- Tracking de UTMs e eventos principais
 - Layout responsivo para mobile e desktop
 
 ## Stack
@@ -49,30 +50,34 @@ npx vite preview
 
 ## Personalizações rápidas
 
-- **URL do Calendly**: `src/app/components/FormSection.tsx`
+- **URL do agendamento**: `src/components/sections/FormSection.tsx`
 - **Capa do vídeo**: `src/assets/video-capa.png`
 - **Foto dos especialistas**: `src/assets/especialistas.png`
 - **Logos dos marketplaces**: `src/assets/logos/`
 - **Cores e fundo**: `src/styles/theme.css` (`--lp-*`)
+- **Webhook de tracking**: variável `VITE_TRACKING_WEBHOOK_URL` no `.env`
 
 ---
 
 ## Documentação técnica
 
-A documentação completa de integração n8n está em:
-- `docs/INTEGRACAO_N8N.md`
+A documentação técnica e oficial está em:
+- `docs/INTEGRACAO_N8N.md` (leads + tracking via n8n)
+- `docs/Documentacao_Oficial.md`
+- `docs/Arquitetura_do_Sistema.md`
+- `docs/Historico_de_Versoes.md`
+- `docs/Diagramas.md`
 
 ---
 
 ## Estrutura relevante
 
-- `src/app/App.tsx`
-- `src/app/components/HeroSection.tsx`
-- `src/app/components/AnalysisSection.tsx`
-- `src/app/components/AuthoritySection.tsx`
-- `src/app/components/ScarcitySection.tsx`
-- `src/app/components/FormSection.tsx`
-- `src/app/components/FinalCTASection.tsx`
+- `src/App.tsx`
+- `src/components/sections/HeroSection.tsx`
+- `src/components/sections/AnalysisSection.tsx`
+- `src/components/sections/AuthoritySection.tsx`
+- `src/components/sections/ScarcitySection.tsx`
+- `src/components/sections/FormSection.tsx`
 - `src/styles/theme.css`
 
 ---
@@ -86,9 +91,9 @@ O layout foi ajustado para mobile e desktop com:
 ---
 
 ## Autoria
-Taynara Souza
+Taynara Correia de Souza
 
 ---
 
 ## Licença
-Este projeto está sob a licença MIT. Consulte o arquivo `LICENSE`.
+Este projeto está sob licença proprietária. Consulte o arquivo `LICENSE`.
