@@ -43,6 +43,10 @@ npm run build
 
 > Observação: o `postbuild` copia `dist/ads.html` para `dist/index.html` para compatibilidade com hospedagens que exigem `index.html` (ex.: Vercel).
 
+## Deploy HostGator
+- A pasta `hostgator/` contém o build pronto para upload.
+- Envie **todo o conteúdo** de `hostgator/` para a raiz do domínio.
+
 ## Preview do Build
 ```bash
 npx vite preview
@@ -65,7 +69,7 @@ npx vite preview
 - Payload enviado ao webhook: `source`, `medium`, `campaign`, `content`, `event`, `url`, `timestamp`.
 
 ## Automação e Lógica Principal
-O formulário monta um payload padronizado com data e hora no formato brasileiro e o envia ao webhook do n8n (leads). O envio tenta `navigator.sendBeacon` e, em fallback, utiliza `fetch` com `keepalive`. Após a tentativa de envio, o usuário é redirecionado para a agenda do Google Calendar. O fluxo completo de automação e tracking está documentado em `docs/INTEGRACAO_N8N.md`.
+O formulário monta um payload padronizado com data e hora no formato brasileiro e o envia ao webhook do n8n (leads). O envio tenta `navigator.sendBeacon` e, em fallback, utiliza `fetch` com `keepalive`. Após a tentativa de envio, o usuário é redirecionado para a agenda do Google Calendar. O fluxo completo de automação e tracking está documentado em `docs/integracao/INTEGRACAO_N8N.md`.
 
 ## Variáveis de Ambiente
 Defina no `.env` local (não versionado):

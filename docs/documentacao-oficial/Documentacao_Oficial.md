@@ -68,7 +68,7 @@ Fora de escopo:
 - src/services/tracking.ts: logica centralizada de tracking.
 - public/tracking.js: tracking para paginas HTML estaticas.
 - src/styles: estilos globais.
-- docs/INTEGRACAO_N8N.md: documentacao da automacao.
+- docs/integracao/INTEGRACAO_N8N.md: documentacao da automacao.
 
 ## 9. Tracking e UTMs
 - Parametros suportados: utm_source, utm_medium, utm_campaign, utm_content.

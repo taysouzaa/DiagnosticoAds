@@ -46,6 +46,10 @@ npm run build
 ```bash
 npx vite preview
 ```
+
+## Deploy HostGator
+- O build pronto fica em `hostgator/` (já inclui `.htaccess`).
+- Faça upload de todo o conteúdo dessa pasta para o domínio.
 ---
 
 ## Personalizações rápidas
@@ -63,11 +67,11 @@ npx vite preview
 ## Documentação técnica
 
 A documentação técnica e oficial está em:
-- `docs/INTEGRACAO_N8N.md` (leads + tracking via n8n)
-- `docs/Documentacao_Oficial.md`
-- `docs/Arquitetura_do_Sistema.md`
-- `docs/Historico_de_Versoes.md`
-- `docs/Diagramas.md`
+- `docs/integracao/INTEGRACAO_N8N.md` (leads + tracking via n8n)
+- `docs/documentacao-oficial/Documentacao_Oficial.md`
+- `docs/arquitetura/Arquitetura_do_Sistema.md`
+- `docs/historico/Historico_de_Versoes.md`
+- `docs/diagramas/Diagramas.md`
 
 ---
 
