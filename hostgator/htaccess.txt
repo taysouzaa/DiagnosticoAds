@@ -1,5 +1,7 @@
-# Arquivo de configuração para hospedagem em Apache/HostGator.
-# Define ads.html como entrada padrão da landing page.
+# Caso o HostGator não permita arquivos iniciados com ponto, mantenha este arquivo
+# como `htaccess.txt`. Se for possível renomear, troque para `.htaccess`.
+#
+# Define ads.html como entrada padrão e evita reescrever arquivos reais.
 DirectoryIndex ads.html
 
 <IfModule mod_rewrite.c>
