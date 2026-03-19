@@ -7,9 +7,13 @@ import App from "./App.tsx";
 import "./styles/index.css";
 import { initTracking, trackEvent } from "./services/tracking";
 
-// Inicializa tracking (captura UTMs) e registra o carregamento da pagina.
-initTracking();
-trackEvent("page_load", { path: window.location.pathname });
+// Evita duplicar tracking caso o HTML ja tenha inicializado.
+const win = window as typeof window & { __trackingInitDone?: boolean };
+if (!win.__trackingInitDone) {
+  initTracking();
+  trackEvent("page_load", { path: window.location.pathname });
+  win.__trackingInitDone = true;
+}
 
 // Inicializa o React no elemento #root definido no HTML.
 createRoot(document.getElementById("root")!).render(<App />);

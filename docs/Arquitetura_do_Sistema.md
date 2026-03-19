@@ -9,7 +9,7 @@ O sistema adota arquitetura de aplicacao web estatica com renderizacao no client
 
 ## 2. Componentes principais
 - Front-end SPA: React + Vite.
-- Servico de tracking: modulo centralizado em src/services/tracking.ts.
+- Servico de tracking: modulo centralizado em src/services/tracking.ts (React) e script public/tracking.js (HTML estatico).
 - Automacao: n8n (webhook).
 - Armazenamento: Google Sheets (leads e tracking).
 - Agendamento: Google Calendar.

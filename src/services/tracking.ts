@@ -1,7 +1,7 @@
 /**
  * Servico centralizado de rastreamento de eventos e UTMs.
- * Registra eventos no console em formato JSON e envia (opcionalmente)
- * para um webhook externo configurado via VITE_TRACKING_WEBHOOK_URL.
+ * Persiste UTMs no localStorage e envia eventos para webhook externo
+ * com payload simples (source/medium/campaign/content/event/url/timestamp).
  */
 
 type UtmParams = {
@@ -13,13 +13,13 @@ type UtmParams = {
 };
 
 type TrackingPayload = {
+  source: string;
+  medium: string;
+  campaign: string;
+  content: string;
   event: string;
-  ts: string;
   url: string;
-  path: string;
-  referrer: string | null;
-  utm: UtmParams;
-  data: Record<string, unknown>;
+  timestamp: string;
 };
 
 const STORAGE_KEY = "diagnosticoads:utm";
@@ -90,8 +90,12 @@ export const initTracking = (): UtmParams => {
   return getStoredUtm();
 };
 
-const logEvent = (payload: TrackingPayload) => {
-  // Log em JSON para facilitar ingestao futura.
+const logEvent = (payload: TrackingPayload, data?: Record<string, unknown>) => {
+  // Log em JSON para facilitar auditoria local.
+  if (data && Object.keys(data).length > 0) {
+    console.log(JSON.stringify({ ...payload, data }));
+    return;
+  }
   console.log(JSON.stringify(payload));
 };
 
@@ -136,17 +140,18 @@ export const trackEvent = (eventName: string, data: Record<string, unknown> = {}
   if (!isBrowser()) return;
 
   try {
+    const utm = getStoredUtm();
     const payload: TrackingPayload = {
+      source: utm.utm_source || "direct",
+      medium: utm.utm_medium || "none",
+      campaign: utm.utm_campaign || "none",
+      content: utm.utm_content || "none",
       event: eventName,
-      ts: new Date().toISOString(),
       url: window.location.href,
-      path: window.location.pathname,
-      referrer: document.referrer || null,
-      utm: getStoredUtm(),
-      data,
+      timestamp: new Date().toISOString(),
     };
 
-    logEvent(payload);
+    logEvent(payload, data);
 
     // Preparado para integracoes futuras.
     sendToGoogleAnalytics(payload);

@@ -55,7 +55,8 @@ npx vite preview
 - **Foto dos especialistas**: `src/assets/especialistas.png`
 - **Logos dos marketplaces**: `src/assets/logos/`
 - **Cores e fundo**: `src/styles/theme.css` (`--lp-*`)
-- **Webhook de tracking**: variável `VITE_TRACKING_WEBHOOK_URL` no `.env`
+- **Webhook de tracking**: variável `VITE_TRACKING_WEBHOOK_URL` no `.env` (aponta para `/webhook/track`)
+- **Tracking HTML**: `public/tracking.js`
 
 ---
 

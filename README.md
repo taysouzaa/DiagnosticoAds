@@ -23,6 +23,7 @@ O projeto apresenta uma jornada direta para conversão: proposta de valor, prova
 - `src/App.tsx`: composição principal das seções da landing page.
 - `src/components/sections`: seções visuais (Hero, Análise, Autoridade, Escassez, Formulário).
 - `src/services/tracking.ts`: rastreamento centralizado de UTMs e eventos.
+- `public/tracking.js`: tracking para páginas HTML estáticas.
 - `src/assets`: imagens e logos utilizados na interface.
 - `src/styles`: estilos globais e tokens de tema.
 - `docs`: documentação técnica e documentos oficiais.
@@ -61,6 +62,7 @@ npx vite preview
 - Eventos padronizados via `trackEvent(eventName, data)`.
 - Log em JSON no console para auditoria local.
 - Envio opcional para webhook externo via variável `VITE_TRACKING_WEBHOOK_URL`.
+- Payload enviado ao webhook: `source`, `medium`, `campaign`, `content`, `event`, `url`, `timestamp`.
 
 ## Automação e Lógica Principal
 O formulário monta um payload padronizado com data e hora no formato brasileiro e o envia ao webhook do n8n (leads). O envio tenta `navigator.sendBeacon` e, em fallback, utiliza `fetch` com `keepalive`. Após a tentativa de envio, o usuário é redirecionado para a agenda do Google Calendar. O fluxo completo de automação e tracking está documentado em `docs/INTEGRACAO_N8N.md`.
@@ -68,7 +70,7 @@ O formulário monta um payload padronizado com data e hora no formato brasileiro
 ## Variáveis de Ambiente
 Defina no `.env` local (não versionado):
 ```bash
-VITE_TRACKING_WEBHOOK_URL=https://.../webhook/DiagnosticoAdsTracking
+VITE_TRACKING_WEBHOOK_URL=https://.../webhook/track
 ```
 
 ## Autor

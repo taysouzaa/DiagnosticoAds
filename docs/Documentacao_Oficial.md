@@ -66,6 +66,7 @@ Fora de escopo:
 - src/App.tsx: composicao das secoes.
 - src/components/sections: secoes visuais.
 - src/services/tracking.ts: logica centralizada de tracking.
+- public/tracking.js: tracking para paginas HTML estaticas.
 - src/styles: estilos globais.
 - docs/INTEGRACAO_N8N.md: documentacao da automacao.
 
@@ -73,7 +74,8 @@ Fora de escopo:
 - Parametros suportados: utm_source, utm_medium, utm_campaign, utm_content.
 - Persistencia: localStorage.
 - Eventos registrados em JSON no console e enviados a webhook quando configurado.
-- Variavel de ambiente: VITE_TRACKING_WEBHOOK_URL (aponta para /webhook/DiagnosticoAdsTracking).
+- Payload do tracking: source, medium, campaign, content, event, url, timestamp.
+- Variavel de ambiente: VITE_TRACKING_WEBHOOK_URL (aponta para /webhook/track).
 
 Eventos padrao:
 - page_load

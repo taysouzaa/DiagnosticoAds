@@ -28,7 +28,7 @@ Google Sheets (Append Row)
 
 Landing Page (Tracking)
    ↓ POST
-n8n Webhook (/webhook/DiagnosticoAdsTracking)
+n8n Webhook (/webhook/track)
    ↓
 Code Node (Normalização / Serialização de data)
    ↓
@@ -53,12 +53,12 @@ https://n8n.srv1095468.hstgr.cloud/webhook-test/DiagnosticoAds
 ### Tracking (Eventos)
 **Produção**
 ```
-https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAdsTracking
+https://n8n.srv1095468.hstgr.cloud/webhook/track
 ```
 
 **Teste (apenas quando o fluxo está em execução manual)**
 ```
-https://n8n.srv1095468.hstgr.cloud/webhook-test/DiagnosticoAdsTracking
+https://n8n.srv1095468.hstgr.cloud/webhook-test/track
 ```
 
 > **Importante:** o endpoint `/webhook-test` não funciona em produção.
@@ -91,24 +91,17 @@ O serviço de tracking envia eventos padronizados para o webhook de tracking:
 
 ```json
 {
+  "source": "instagram",
+  "medium": "social",
+  "campaign": "mar2026",
+  "content": "story",
   "event": "page_load",
-  "ts": "2026-03-19T10:12:45.000-03:00",
-  "url": "https://seudominio.com/ads.html",
-  "path": "/ads.html",
-  "referrer": "https://google.com/",
-  "utm": {
-    "utm_source": "google",
-    "utm_medium": "cpc",
-    "utm_campaign": "mar2026",
-    "utm_content": "banner"
-  },
-  "data": {
-    "location": "hero"
-  }
+  "url": "https://diagnosticoads.metodop4.com.br/?utm_source=instagram&utm_medium=social&utm_campaign=mar2026&utm_content=story",
+  "timestamp": "2026-03-19T10:12:45.000-03:00"
 }
 ```
 
-> **Observação:** para gravar o campo `data` no Google Sheets, recomenda-se serializar em JSON no Code Node (ex.: `JSON.stringify($json.data)`).
+> **Observação:** quando não houver UTMs na URL, o tracking usa os valores padrão: `source=direct`, `medium=none`, `campaign=none`, `content=none`.
 
 ---
 
@@ -192,32 +185,26 @@ return [{ json: data }];
 **Operação:** `append`
 
 ### Colunas necessárias
+- `source`
+- `medium`
+- `campaign`
+- `content`
 - `event`
-- `ts`
 - `url`
-- `path`
-- `referrer`
-- `utm_source`
-- `utm_medium`
-- `utm_campaign`
-- `utm_content`
-- `data`
+- `timestamp`
 
 ### Mapeamento recomendado (Define Below)
 ```text
-"event"       → {{$json["event"]}}
-"ts"          → {{$json["ts"]}}
-"url"         → {{$json["url"]}}
-"path"        → {{$json["path"]}}
-"referrer"    → {{$json["referrer"]}}
-"utm_source"  → {{$json["utm"]["utm_source"]}}
-"utm_medium"  → {{$json["utm"]["utm_medium"]}}
-"utm_campaign"→ {{$json["utm"]["utm_campaign"]}}
-"utm_content" → {{$json["utm"]["utm_content"]}}
-"data"        → {{JSON.stringify($json["data"])}}
+"source"    → {{$json["source"]}}
+"medium"    → {{$json["medium"]}}
+"campaign"  → {{$json["campaign"]}}
+"content"   → {{$json["content"]}}
+"event"     → {{$json["event"]}}
+"url"       → {{$json["url"]}}
+"timestamp" → {{$json["timestamp"]}}
 ```
 
-> **Nota:** caso o node de Code normalize os campos, ajuste o mapeamento para o formato final.
+> **Nota:** caso adicione campos extras no payload, crie novas colunas e ajuste o mapeamento.
 
 ---
 
@@ -234,8 +221,11 @@ https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 ### Tracking (eventos)
 Definir a variável de ambiente abaixo no `.env` (local) ou no provedor de deploy:
 ```
-VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAdsTracking
+VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/track
 ```
+
+Para páginas HTML simples (HostGator), incluir o script `public/tracking.js`
+e chamar `window.Tracking.init()` + `window.Tracking.track("page_load")` no HTML.
 
 ### Payload enviado (resumo)
 ```json
@@ -252,7 +242,8 @@ VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/Diagnostico
 
 > Implementação no front-end:
 > - Leads: `src/components/sections/FormSection.tsx`
-> - Tracking: `src/services/tracking.ts`
+> - Tracking (React): `src/services/tracking.ts`
+> - Tracking (HTML estático): `public/tracking.js`
 
 ---
 
@@ -265,7 +256,7 @@ VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/Diagnostico
 5. Workflow de tracking **ativado** no n8n.
 6. Variável `VITE_TRACKING_WEBHOOK_URL` configurada.
 7. Aba `Tracking` com colunas corretas.
-8. Deploy atualizado no Vercel.
+8. Deploy atualizado no Vercel/HostGator.
 
 ---
 
@@ -291,7 +282,7 @@ Use `return [{ json: data }];` sempre.
 ### ✅ Tracking cria colunas repetidas no final da planilha
 Causa: os nomes da linha 1 **não batem exatamente** com o payload.
 Confirme que a aba `Tracking` possui:
-`event`, `ts`, `url`, `path`, `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_content`, `data`.
+`source`, `medium`, `campaign`, `content`, `event`, `url`, `timestamp`.
 
 ---
 

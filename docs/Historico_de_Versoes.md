@@ -4,6 +4,11 @@ Projeto: DiagnosticoAds
 Data: 19/03/2026  
 Responsavel tecnico: Taynara Correia de Souza
 
+## Versao 1.1.2 - 19/03/2026
+- Tracking padronizado com payload source/medium/campaign/content/event/url/timestamp.
+- Script de tracking para HTML estatico em public/tracking.js.
+- Documentacao atualizada para webhook /webhook/track.
+
 ## Versao 1.1.1 - 19/03/2026
 - Documentacao atualizada para leads e tracking via n8n.
 - Comentarios revisados para refletir webhook de tracking.
