@@ -4,6 +4,11 @@ Projeto: DiagnosticoAds
 Data: 19/03/2026  
 Responsavel tecnico: Taynara Correia de Souza
 
+## Versao 1.1.3 - 20/03/2026
+- Remocao completa do tracking e captura de UTMs no front-end.
+- Exclusao dos scripts e servicos de tracking (React e HTML estatico).
+- Documentacao ajustada para fluxo apenas de leads.
+
 ## Versao 1.1.2 - 19/03/2026
 - Tracking padronizado com payload source/medium/campaign/content/event/url/timestamp.
 - Script de tracking para HTML estatico em public/tracking.js.

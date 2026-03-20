@@ -7,9 +7,11 @@ DirectoryIndex ads.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  # URLs limpas por canal (preserva UTMs e outros params).
+  RewriteRule ^youtube/?$ /?channel=youtube [L,QSA]
+  RewriteRule ^instagram/?$ /?channel=instagram [L,QSA]
   RewriteRule ^ads\.html$ - [L]
   RewriteRule ^ads-assets/ - [L]
-  RewriteRule ^tracking\.js$ - [L]
   RewriteRule ^01\.png$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d

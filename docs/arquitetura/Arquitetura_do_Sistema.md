@@ -9,30 +9,25 @@ O sistema adota arquitetura de aplicacao web estatica com renderizacao no client
 
 ## 2. Componentes principais
 - Front-end SPA: React + Vite.
-- Servico de tracking: modulo centralizado em src/services/tracking.ts (React) e script public/tracking.js (HTML estatico).
 - Automacao: n8n (webhook).
-- Armazenamento: Google Sheets (leads e tracking).
+- Armazenamento: Google Sheets (leads).
 - Agendamento: Google Calendar.
 - Midia: YouTube embed.
 
 ## 3. Estrutura logica
 - App.tsx compoe as secoes.
 - Sections: Hero, Analysis, Authority, Scarcity, Form.
-- Tracking: captura UTMs, persiste em localStorage e registra eventos.
 
 ## 4. Fluxo de dados
-1. Usuario acessa a pagina e UTMs sao capturadas.
-2. Tracking registra page_load com contexto de URL e referrer.
-3. Usuario interage com CTA e eventos de clique sao registrados.
-4. Usuario envia formulario; payload e enviado ao webhook de leads.
-5. Tracking registra form_submit e schedule_redirect (com envio opcional via webhook de tracking).
-6. n8n normaliza dados e grava no Google Sheets (leads e tracking).
-7. Usuario e redirecionado ao Google Calendar.
+1. Usuario acessa a pagina.
+2. Usuario interage com CTA e preenche o formulario.
+3. Usuario envia formulario; payload e enviado ao webhook de leads.
+4. n8n normaliza dados e grava no Google Sheets (leads).
+5. Usuario e redirecionado ao Google Calendar.
 
 ## 5. Integracoes externas
 - n8n: recepcao do payload via webhook.
-- n8n Tracking: recepcao de eventos via webhook dedicado.
-- Google Sheets: append de linhas (aba de leads e aba de tracking).
+- Google Sheets: append de linhas (aba de leads).
 - Google Calendar: agendamento.
 - YouTube: video incorporado.
 
@@ -46,5 +41,4 @@ O sistema adota arquitetura de aplicacao web estatica com renderizacao no client
 - Limites operacionais dependem do throughput do n8n e do Google Sheets.
 
 ## 8. Observabilidade
-- Logging local via console em JSON.
-- Preparacao para integracao futura com Google Analytics, Meta Pixel e webhooks.
+- Sem telemetria ou tracking no front-end.

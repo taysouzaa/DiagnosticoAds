@@ -3,11 +3,42 @@
  * Inclui seleção de marketplaces e validações básicas no front-end.
  */
 import { useState } from "react";
-import { getUtmParams, trackEvent } from "../../services/tracking";
 import mercadoLivreLogo from "../../assets/logos/mercado-livre.svg";
 import shopeeLogo from "../../assets/logos/shopee.png";
 import amazonLogo from "../../assets/logos/amazon.png";
 import magaluLogo from "../../assets/logos/magalu.png";
+
+type TrackingData = {
+  channel: string;
+  source: string;
+  medium: string;
+  campaign: string;
+};
+
+const TRACKING_STORAGE_KEY = "diagnosticoads:tracking";
+const DEFAULT_TRACKING: TrackingData = {
+  channel: "direto",
+  source: "direto",
+  medium: "none",
+  campaign: "none",
+};
+
+const getTrackingData = (): TrackingData => {
+  if (typeof window === "undefined") return { ...DEFAULT_TRACKING };
+  try {
+    const raw = window.localStorage.getItem(TRACKING_STORAGE_KEY);
+    if (!raw) return { ...DEFAULT_TRACKING };
+    const parsed = JSON.parse(raw) as Partial<TrackingData>;
+    return {
+      channel: parsed.channel || DEFAULT_TRACKING.channel,
+      source: parsed.source || DEFAULT_TRACKING.source,
+      medium: parsed.medium || DEFAULT_TRACKING.medium,
+      campaign: parsed.campaign || DEFAULT_TRACKING.campaign,
+    };
+  } catch {
+    return { ...DEFAULT_TRACKING };
+  }
+};
 
 /**
  * Opções de marketplaces exibidas como botões seletivos.
@@ -75,12 +106,6 @@ export function FormSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    trackEvent("form_submit", {
-      selected_marketplaces: selected,
-      has_name: Boolean(name),
-      has_email: Boolean(email),
-      has_whatsapp: Boolean(whatsapp),
-    });
     try {
       // Timestamp local para registrar data e hora de entrada do lead.
       const now = new Date();
@@ -88,7 +113,11 @@ export function FormSection() {
       const time = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
       // Payload alinhado às colunas do Google Sheets (inclui espaço no final).
-      const utm = getUtmParams();
+      const tracking = getTrackingData();
+      const selectedLabels = selected.map((id) => {
+        const option = marketplaceOptions.find((item) => item.id === id);
+        return option?.label || id;
+      });
       const payload = {
         "Nome completo ": name,
         "E-mail": email,
@@ -96,11 +125,13 @@ export function FormSection() {
         "Data de entrada de leads": date,
         "Data": date,
         "Hora": time,
+        "Quais marketplaces você anuncia": selectedLabels,
         "Funil": "DiagnosticoAds",
-        utm_source: utm.utm_source || "",
-        utm_medium: utm.utm_medium || "",
-        utm_campaign: utm.utm_campaign || "",
-        utm_content: utm.utm_content || "",
+        channel: tracking.channel,
+        source: tracking.source,
+        medium: tracking.medium,
+        campaign: tracking.campaign,
+        timestamp: new Date().toISOString(),
       };
 
       const body = JSON.stringify(payload);
@@ -131,7 +162,6 @@ export function FormSection() {
     } catch {
       // Mesmo se falhar, seguimos o fluxo para o agendamento.
     } finally {
-      trackEvent("schedule_redirect", { destination: "google_calendar" });
       // Redirecionamento para a agenda após envio (ou tentativa de envio).
       window.location.href = calendarUrl;
     }
@@ -370,7 +400,6 @@ export function FormSection() {
               type="submit"
               disabled={loading || selected.length === 0}
               className="w-full flex items-center justify-center gap-3 py-5 rounded-2xl transition-all duration-300 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
-              onClick={() => trackEvent("schedule_click", { location: "form" })}
               style={{
                 background: "var(--lp-accent)",
                 color: "var(--lp-bg)",

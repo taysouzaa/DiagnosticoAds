@@ -7,11 +7,10 @@ Responsavel tecnico: Taynara Correia de Souza
 ## Diagrama 1 - Fluxo de usuario
 ```mermaid
 flowchart TD
-  A[Usuario acessa landing page] --> B[Captura de UTMs e page_load]
-  B --> C[Clique no CTA]
-  C --> D[Formulario]
-  D --> E[Envio de payload para n8n]
-  E --> F[Redirect para Google Calendar]
+  A[Usuario acessa landing page] --> B[Clique no CTA]
+  B --> C[Formulario]
+  C --> D[Envio de payload para n8n]
+  D --> E[Redirect para Google Calendar]
 ```
 
 ## Diagrama 2 - Fluxo de integracao
@@ -22,18 +21,7 @@ flowchart TD
   C --> D[Google Sheets - Append Row]
 ```
 
-## Diagrama 3 - Fluxo de tracking
-```mermaid
-flowchart TD
-  A[Init Tracking] --> B[Captura de UTM]
-  B --> C[Persistencia em localStorage]
-  C --> D[Eventos trackEvent]
-  D --> E[Console JSON]
-  D --> F[Webhook Tracking (n8n)]
-  F --> G[Google Sheets - Tracking]
-```
-
-## Diagrama 4 - Estrutura de componentes
+## Diagrama 3 - Estrutura de componentes
 ```mermaid
 flowchart TD
   App[App.tsx] --> Hero[HeroSection]

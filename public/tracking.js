@@ -1,105 +1,123 @@
-// tracking.js - utilitario simples para paginas HTML estaticas
+// tracking.js - rastreamento leve de origem (channel + UTMs) para paginas estaticas
 (() => {
-  const STORAGE_KEY = "diagnosticoads:utm";
-  const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+  if (typeof window === "undefined") return;
+  if (window.Tracking) return;
 
-  // Permite override via window.TRACKING_WEBHOOK_URL
-  const WEBHOOK_URL =
-    (typeof window !== "undefined" && window.TRACKING_WEBHOOK_URL) ||
-    "https://n8n.srv1095468.hstgr.cloud/webhook/track";
-
-  const isBrowser = () => typeof window !== "undefined";
-
-  const parseUtmFromUrl = () => {
-    if (!isBrowser()) return {};
-    const params = new URLSearchParams(window.location.search);
-    const utm = {};
-    UTM_KEYS.forEach((key) => {
-      const value = params.get(key);
-      if (value) utm[key] = value;
-    });
-    return utm;
+  const STORAGE_KEY = "diagnosticoads:tracking";
+  const DEFAULTS = {
+    channel: "direto",
+    source: "direto",
+    medium: "none",
+    campaign: "none",
   };
 
-  const loadStoredUtm = () => {
-    if (!isBrowser()) return {};
+  // Escalavel: adicione novos canais e dominos aqui.
+  const REFERRER_CHANNELS = [
+    { channel: "youtube", hosts: ["youtube.com", "youtu.be"] },
+    { channel: "instagram", hosts: ["instagram.com", "l.instagram.com"] },
+  ];
+
+  const safeStorage = () => {
     try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
+      return window.localStorage;
+    } catch {
+      return null;
+    }
+  };
+
+  const normalize = (value) => {
+    if (typeof value !== "string") return null;
+    const trimmed = value.trim();
+    return trimmed.length ? trimmed : null;
+  };
+
+  // Função isolada para parsing da URL.
+  const parseFromUrl = () => {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        channel: normalize(params.get("channel")),
+        utm_source: normalize(params.get("utm_source")),
+        utm_medium: normalize(params.get("utm_medium")),
+        utm_campaign: normalize(params.get("utm_campaign")),
+      };
     } catch {
       return {};
     }
   };
 
-  const saveUtm = (utm) => {
-    if (!isBrowser()) return;
-    const hasAny = UTM_KEYS.some((key) => Boolean(utm[key]));
-    if (!hasAny) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(utm));
-    } catch {
-      // Silencioso
+  const channelFromReferrer = () => {
+    const referrer = (document.referrer || "").toLowerCase();
+    if (!referrer) return null;
+    for (const entry of REFERRER_CHANNELS) {
+      for (const host of entry.hosts) {
+        if (referrer.includes(host)) return entry.channel;
+      }
     }
+    return null;
   };
 
-  const initTracking = () => {
-    const fromUrl = parseUtmFromUrl();
-    const stored = loadStoredUtm();
-    const merged = { ...stored, ...fromUrl };
-    if (Object.keys(fromUrl).length > 0) saveUtm(merged);
-    return merged;
-  };
+  const buildTracking = () => {
+    const fromUrl = parseFromUrl();
+    let channel = fromUrl.channel || channelFromReferrer();
 
-  const buildPayload = (eventName) => {
-    const utm = loadStoredUtm();
+    // Se nao houver channel, usa utm_source como fallback de canal.
+    if (!channel && fromUrl.utm_source) {
+      channel = fromUrl.utm_source;
+    }
+
+    const source = fromUrl.utm_source || (channel ? channel : null) || DEFAULTS.source;
+    const medium = fromUrl.utm_medium || (channel ? "organic" : null) || DEFAULTS.medium;
+    const campaign = fromUrl.utm_campaign || (channel ? "canal" : null) || DEFAULTS.campaign;
+
     return {
-      source: utm.utm_source || "direct",
-      medium: utm.utm_medium || "none",
-      campaign: utm.utm_campaign || "none",
-      content: utm.utm_content || "none",
-      event: eventName,
-      url: isBrowser() ? window.location.href : "",
-      timestamp: new Date().toISOString(),
+      channel: channel || DEFAULTS.channel,
+      source,
+      medium,
+      campaign,
     };
   };
 
-  const sendToWebhook = (payload) => {
-    if (!WEBHOOK_URL) return;
-    const body = JSON.stringify(payload);
-
+  const readStored = () => {
+    const storage = safeStorage();
+    if (!storage) return null;
     try {
-      if (navigator.sendBeacon) {
-        const sent = navigator.sendBeacon(
-          WEBHOOK_URL,
-          new Blob([body], { type: "text/plain;charset=UTF-8" })
-        );
-        if (sent) return;
-      }
+      const raw = storage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : null;
     } catch {
-      // fallback abaixo
-    }
-
-    try {
-      fetch(WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=UTF-8" },
-        body,
-        mode: "no-cors",
-        keepalive: true,
-      });
-    } catch {
-      // Silencioso
+      return null;
     }
   };
 
-  const trackEvent = (eventName) => {
-    if (!isBrowser()) return;
-    const payload = buildPayload(eventName);
-    sendToWebhook(payload);
+  const persist = (data) => {
+    const storage = safeStorage();
+    if (!storage) return;
+    try {
+      storage.setItem(STORAGE_KEY, JSON.stringify(data));
+    } catch {
+      // Silencioso para nao quebrar o fluxo.
+    }
+  };
+
+  // Inicializa sem sobrescrever se ja existir (persistencia).
+  const init = () => {
+    const existing = readStored();
+    if (existing) return existing;
+    const data = buildTracking();
+    persist(data);
+    return data;
+  };
+
+  const get = () => {
+    const stored = readStored();
+    return stored ? { ...DEFAULTS, ...stored } : { ...DEFAULTS };
   };
 
   window.Tracking = {
-    init: initTracking,
-    track: trackEvent,
+    init,
+    get,
+    parseUrl: parseFromUrl,
   };
 })();

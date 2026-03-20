@@ -3,8 +3,6 @@
  *
  * @returns JSX.Element
  */
-import { trackEvent } from "../../services/tracking";
-
 export function HeroSection() {
   /**
    * Rola suavemente até o formulário de captura.
@@ -15,12 +13,11 @@ export function HeroSection() {
     document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
   };
   /**
-   * Registra o clique no CTA e executa a rolagem.
+   * Executa a rolagem ao clicar no CTA.
    *
    * @returns void
    */
   const handleCtaClick = () => {
-    trackEvent("schedule_click", { location: "hero" });
     scrollToForm();
   };
 

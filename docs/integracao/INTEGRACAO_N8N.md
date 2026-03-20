@@ -1,4 +1,4 @@
-# Integração DiagnósticoAds → n8n → Google Sheets (Leads e Tracking)
+# Integração DiagnósticoAds → n8n → Google Sheets (Leads)
 
 **Data:** 05/03/2026  
 **Projeto:** DiagnósticoAds  
@@ -7,7 +7,7 @@
 ---
 
 ## 1) Objetivo
-Registrar automaticamente os dados do formulário e eventos de tracking da landing page **DiagnósticoAds** em planilhas do Google Sheets via **n8n**, garantindo:
+Registrar automaticamente os dados do formulário da landing page **DiagnósticoAds** em planilhas do Google Sheets via **n8n**, garantindo:
 - Padronização dos campos
 - Funil preenchido automaticamente
 - Data e hora em formato brasileiro
@@ -25,14 +25,6 @@ n8n Webhook (/webhook/DiagnosticoAds)
 Code Node (Parse Body + Normalização)
    ↓
 Google Sheets (Append Row)
-
-Landing Page (Tracking)
-   ↓ POST
-n8n Webhook (/webhook/track)
-   ↓
-Code Node (Normalização / Serialização de data)
-   ↓
-Google Sheets (Append Row - Tracking)
 ```
 
 ---
@@ -48,17 +40,6 @@ https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 **Teste (apenas quando o fluxo está em execução manual)**
 ```
 https://n8n.srv1095468.hstgr.cloud/webhook-test/DiagnosticoAds
-```
-
-### Tracking (Eventos)
-**Produção**
-```
-https://n8n.srv1095468.hstgr.cloud/webhook/track
-```
-
-**Teste (apenas quando o fluxo está em execução manual)**
-```
-https://n8n.srv1095468.hstgr.cloud/webhook-test/track
 ```
 
 > **Importante:** o endpoint `/webhook-test` não funciona em produção.
@@ -82,26 +63,6 @@ A landing page envia os dados com os **mesmos nomes das colunas** da planilha:
 ```
 
 > **Obs.:** a coluna “Nome completo ” possui **espaço no final**, por isso o payload mantém o mesmo nome.
-
----
-
-## 4.1) Payload de Tracking (Eventos)
-
-O serviço de tracking envia eventos padronizados para o webhook de tracking:
-
-```json
-{
-  "source": "instagram",
-  "medium": "social",
-  "campaign": "mar2026",
-  "content": "story",
-  "event": "page_load",
-  "url": "https://diagnosticoads.metodop4.com.br/?utm_source=instagram&utm_medium=social&utm_campaign=mar2026&utm_content=story",
-  "timestamp": "2026-03-19T10:12:45.000-03:00"
-}
-```
-
-> **Observação:** quando não houver UTMs na URL, o tracking usa os valores padrão: `source=direct`, `medium=none`, `campaign=none`, `content=none`.
 
 ---
 
@@ -179,35 +140,6 @@ return [{ json: data }];
 
 ---
 
-## 6.1) Google Sheets (Tracking)
-
-**Aba recomendada:** `Tracking`  
-**Operação:** `append`
-
-### Colunas necessárias
-- `source`
-- `medium`
-- `campaign`
-- `content`
-- `event`
-- `url`
-- `timestamp`
-
-### Mapeamento recomendado (Define Below)
-```text
-"source"    → {{$json["source"]}}
-"medium"    → {{$json["medium"]}}
-"campaign"  → {{$json["campaign"]}}
-"content"   → {{$json["content"]}}
-"event"     → {{$json["event"]}}
-"url"       → {{$json["url"]}}
-"timestamp" → {{$json["timestamp"]}}
-```
-
-> **Nota:** caso adicione campos extras no payload, crie novas colunas e ajuste o mapeamento.
-
----
-
 ## 7) Configuração no Front-end
 
 No front-end, o payload é disparado **antes** do redirecionamento ao Google Calendar.
@@ -217,15 +149,6 @@ O envio é feito em **text/plain** para evitar bloqueio de CORS.
 ```
 https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 ```
-
-### Tracking (eventos)
-Definir a variável de ambiente abaixo no `.env` (local) ou no provedor de deploy:
-```
-VITE_TRACKING_WEBHOOK_URL=https://n8n.srv1095468.hstgr.cloud/webhook/track
-```
-
-Para páginas HTML simples (HostGator), incluir o script `public/tracking.js`
-e chamar `window.Tracking.init()` + `window.Tracking.track("page_load")` no HTML.
 
 ### Payload enviado (resumo)
 ```json
@@ -242,8 +165,6 @@ e chamar `window.Tracking.init()` + `window.Tracking.track("page_load")` no HTML
 
 > Implementação no front-end:
 > - Leads: `src/components/sections/FormSection.tsx`
-> - Tracking (React): `src/services/tracking.ts`
-> - Tracking (HTML estático): `public/tracking.js`
 
 ---
 
@@ -253,10 +174,7 @@ e chamar `window.Tracking.init()` + `window.Tracking.track("page_load")` no HTML
 2. URL correta no front-end: `/webhook/DiagnosticoAds`.
 3. Node Google Sheets em **append** (não update).
 4. Colunas do Sheets com nomes **idênticos** ao payload.
-5. Workflow de tracking **ativado** no n8n.
-6. Variável `VITE_TRACKING_WEBHOOK_URL` configurada.
-7. Aba `Tracking` com colunas corretas.
-8. Deploy atualizado no Vercel/HostGator.
+5. Deploy atualizado no Vercel/HostGator.
 
 ---
 
@@ -279,17 +197,10 @@ Confirme:
 O Code Node está retornando algo que não é objeto.
 Use `return [{ json: data }];` sempre.
 
-### ✅ Tracking cria colunas repetidas no final da planilha
-Causa: os nomes da linha 1 **não batem exatamente** com o payload.
-Confirme que a aba `Tracking` possui:
-`source`, `medium`, `campaign`, `content`, `event`, `url`, `timestamp`.
-
----
-
 ## 10) Manutenção e Evolução
 
 Se futuramente for necessário:
-- adicionar novos campos (ex.: marketplace, UTM, status)
+- adicionar novos campos (ex.: marketplace, status)
 - gravar dados adicionais (ex.: página, origem, campanhas)
 
 Basta:

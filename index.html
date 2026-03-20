@@ -14,11 +14,10 @@
 
     <body>
       <div id="root"></div>
-      <script src="/tracking.js"></script>
+      <script src="./tracking.js"></script>
       <script>
-        if (!window.__trackingInitDone && window.Tracking) {
+        if (window.Tracking && !window.__trackingInitDone) {
           window.Tracking.init();
-          window.Tracking.track("page_load");
           window.__trackingInitDone = true;
         }
       </script>
