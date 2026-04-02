@@ -7,27 +7,22 @@
  */
 const items = [
   {
-    num: "01",
     title: "Distribuição da verba por campanhas",
     desc: "Onde seu orçamento está concentrado e o que precisa ajustar.",
   },
   {
-    num: "02",
     title: "Campanhas que travam sua escala",
     desc: "Gargalos de segmentação, criativo e orçamento.",
   },
   {
-    num: "03",
     title: "Estrutura alinhada ao seu faturamento",
     desc: "Se o setup atual suporta o nível de vendas que você tem hoje.",
   },
   {
-    num: "04",
     title: "Pontos de desperdício de investimento",
     desc: "Canais e termos com baixa eficiência.",
   },
   {
-    num: "05",
     title: "Ajustes práticos de performance",
     desc: "Prioridades claras para executar rápido e melhorar resultado.",
   },
@@ -72,9 +67,9 @@ export function AnalysisSection() {
 
         {/* Itens principais do diagnóstico */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-10 max-w-5xl mx-auto mb-12 text-left">
-          {items.map((item, i) => (
+          {items.map((item) => (
             <div
-              key={i}
+              key={item.title}
               className="flex items-start gap-3"
             >
               <span className="mt-1 w-4 flex-shrink-0" style={{ color: "var(--lp-accent-2)" }}>✓</span>

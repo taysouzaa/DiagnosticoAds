@@ -2,11 +2,11 @@
  * App principal da landing page DiagnósticoAds.
  * Organiza a sequência de seções e o rodapé da aplicação.
  */
-import { HeroSection } from "./components/sections/HeroSection";
-import { AnalysisSection } from "./components/sections/AnalysisSection";
-import { AuthoritySection } from "./components/sections/AuthoritySection";
-import { ScarcitySection } from "./components/sections/ScarcitySection";
-import { FormSection } from "./components/sections/FormSection";
+import { HeroSection } from "./sections/HeroSection";
+import { AnalysisSection } from "./sections/AnalysisSection";
+import { AuthoritySection } from "./sections/AuthoritySection";
+import { ScarcitySection } from "./sections/ScarcitySection";
+import { FormSection } from "./sections/FormSection";
 
 /**
  * Componente raiz da aplicação.

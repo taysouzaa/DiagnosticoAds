@@ -1,82 +1,117 @@
-# DiagnósticoAds — Landing Page de Diagnóstico Estratégico
+# DiagnósticoAds
 
-Landing page de alta conversão para diagnóstico estratégico de anúncios em marketplaces (Mercado Livre, Shopee e Amazon), com captura de leads e agendamento automatizado.
+Landing page de captação de leads para diagnóstico estratégico de anúncios em marketplaces, com envio para automação n8n e redirecionamento para agendamento.
 
-## Visão Geral
-O projeto apresenta uma jornada direta para conversão: proposta de valor, prova de autoridade, vídeo explicativo, escassez controlada e formulário com envio de lead. O objetivo é reduzir fricção e guiar o usuário até o agendamento do diagnóstico.
+## Descrição do Projeto
 
-## Demonstração
-- Execute o projeto localmente e acesse `http://localhost:5173`.
-- Fluxo esperado: visualizar a proposta, assistir ao vídeo, preencher o formulário, selecionar marketplaces e ser redirecionado para a agenda.
+O projeto foi construído como SPA em React/Vite para maximizar conversão com fluxo direto:
+
+1. Proposta de valor (Hero).
+2. Explicação do que será analisado.
+3. Prova de autoridade.
+4. Vídeo explicativo e escassez.
+5. Formulário com captura de origem (channel/UTM), envio do lead e redirecionamento.
 
 ## Tecnologias Utilizadas
-- React
+
+- React 18
 - TypeScript
-- Vite
+- Vite 6
 - Tailwind CSS v4
 - PostCSS
-- n8n (automação)
-- Google Sheets (armazenamento de leads)
+- n8n (webhook)
+- Google Sheets (persistência via n8n)
 - Google Calendar (agendamento)
 
-## Estrutura do Projeto
-- `src/App.tsx`: composição principal das seções da landing page.
-- `src/components/sections`: seções visuais (Hero, Análise, Autoridade, Escassez, Formulário).
-- `src/assets`: imagens e logos utilizados na interface.
-- `src/styles`: estilos globais e tokens de tema.
-- `docs`: documentação técnica e documentos oficiais.
-- `public/tracking.js`: tracking leve de origem (channel/UTM) para páginas estáticas.
-- `public/htaccess-hostgator.txt`: regra de deploy para Apache/HostGator.
-- `ads.html`: entrada de build usada no Rollup/Vite.
+## Instalação
 
-## Instalação e Execução
+Pré-requisitos:
+
+- Node.js 18+
+- npm 9+
+
+Passos:
+
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
 
-## Build de Produção
-```bash
-npm run build
+Aplicação local: `http://localhost:5173`
+
+## Scripts
+
+- `npm run dev`: ambiente de desenvolvimento.
+- `npm run build`: build de produção (`ads.html` como entrada principal).
+- `npm run postbuild`: copia `dist/ads.html` para `dist/index.html`.
+
+## Estrutura do Projeto
+
+```text
+src
+├─ assets
+├─ sections
+├─ config
+├─ lib
+├─ styles
+├─ App.tsx
+└─ main.tsx
+public
+├─ tracking.js
+└─ htaccess-hostgator.txt
+docs
+├─ arquitetura.md
+├─ diagramas.md
+├─ diagramas-mermaid-2026-04-02.md
+├─ documentacao-tecnica.md
+├─ engenharia-revisao-2026-04-02.md
+├─ historico-versoes.md
+└─ integracao-n8n.md
+deploy
+└─ hostgator
 ```
 
-> Observação: o `postbuild` copia `dist/ads.html` para `dist/index.html` para compatibilidade com hospedagens que exigem `index.html` (ex.: Vercel).
+## Funcionalidades
 
-## Deploy HostGator
-- A pasta `hostgator/` contém o build pronto para upload.
-- Envie **todo o conteúdo** de `hostgator/` para a raiz do domínio.
+- Landing page responsiva com seções modulares.
+- CTA com rolagem suave até o formulário.
+- Seleção de marketplaces no formulário.
+- Tracking de origem por URL/referrer persistido em `localStorage`.
+- Envio de lead com fallback (`sendBeacon` e `fetch` com `keepalive`).
+- Redirecionamento imediato para agenda após tentativa de envio.
 
-## Preview do Build
-```bash
-npx vite preview
+## Configuração de Ambiente
+
+Arquivo `.env.local`:
+
+```env
+VITE_CALENDAR_URL=https://calendar.app.google/...
+VITE_LEAD_WEBHOOK_URL=https://seu-n8n/webhook/DiagnosticoAds
 ```
 
-## Funcionalidades Principais
-- CTA com rolagem suave para o formulário.
-- Seção de análise com pontos objetivos do diagnóstico.
-- Prova de autoridade com especialistas e marketplaces atendidos.
-- Vídeo explicativo com capa customizada.
-- Formulário com validação básica e seleção de marketplaces.
-- Envio de lead para automação e redirecionamento para agendamento.
-- Tracking de origem (channel + UTMs) persistido em `localStorage` e enviado com o lead.
+Sem override, o projeto usa valores default definidos em [src/config/runtime.ts](/c:/Users/Tainara/OneDrive/Documentos/Dev-projects/LP-diagnostico/src/config/runtime.ts).
 
-## Tracking de Origem (Channel + UTM)
-- URLs limpas por canal via `.htaccess` (ex.: `/youtube`, `/instagram` → `?channel=`).
-- Captura de `channel`, `utm_source`, `utm_medium`, `utm_campaign`.
-- Fallback por `document.referrer` (YouTube/Instagram) e valores padrão.
-- Persistência local sem sobrescrever sessões já iniciadas.
-- Campos enviados no lead: `channel`, `source`, `medium`, `campaign`, `timestamp`.
+## Integrações
 
-## Automação e Lógica Principal
-O formulário monta um payload padronizado com data e hora no formato brasileiro, inclui marketplaces e dados de tracking (origem) e envia ao webhook do n8n (leads). O envio tenta `navigator.sendBeacon` e, em fallback, utiliza `fetch` com `keepalive`. Após a tentativa de envio, o usuário é redirecionado para a agenda do Google Calendar. O fluxo completo de automação está documentado em `docs/integracao/INTEGRACAO_N8N.md`.
+- Webhook n8n para recebimento de leads.
+- Google Sheets para armazenamento dos leads (via workflow).
+- Google Calendar para agendamento.
+- YouTube para vídeo incorporado.
+
+## Segurança e Boas Práticas
+
+- Não há autenticação no front-end; segurança depende do endpoint n8n.
+- Recomenda-se restringir origem e aplicar validação/antispam no workflow.
+- Segredos não devem ficar no repositório; usar variáveis de ambiente.
+- Revisão técnica completa: [docs/engenharia-revisao-2026-04-02.md](/c:/Users/Tainara/OneDrive/Documentos/Dev-projects/LP-diagnostico/docs/engenharia-revisao-2026-04-02.md).
 
 ## Autor
-- **Taynara Correia de Souza**
+
+- Taynara Correia de Souza
 - Email: [taynara.souza.dev@gmail.com](mailto:taynara.souza.dev@gmail.com)
-- Telefone/WhatsApp: +55 (19) 93500-3600
+- Telefone / WhatsApp: +55 (19) 93500-3600
 
 ## Licença
-Este projeto está sob licença proprietária. Consulte o arquivo `LICENSE`.
 
-## Aviso de Propriedade Intelectual
-Este projeto é propriedade de Taynara Correia de Souza. O código é disponibilizado exclusivamente para fins de demonstração profissional e portfólio, sendo proibido qualquer uso, cópia, modificação ou redistribuição sem autorização prévia.
+Licença proprietária. Consulte [LICENSE](/c:/Users/Tainara/OneDrive/Documentos/Dev-projects/LP-diagnostico/LICENSE).

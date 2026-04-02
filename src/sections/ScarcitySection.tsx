@@ -3,7 +3,7 @@
  * Integra um embed do YouTube com capa estática.
  */
 import { useState } from "react";
-import videoCover from "../../assets/video-capa.png";
+import videoCover from "../assets/video-capa.png";
 
 /**
  * Seção com vídeo explicativo e card de escassez controlada.

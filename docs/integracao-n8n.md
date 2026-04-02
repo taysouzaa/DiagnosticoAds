@@ -216,7 +216,7 @@ https://n8n.srv1095468.hstgr.cloud/webhook/DiagnosticoAds
 ```
 
 > Implementação no front-end:
-> - Leads: `src/components/sections/FormSection.tsx`
+> - Leads: `src/sections/FormSection.tsx`
 
 ---
 

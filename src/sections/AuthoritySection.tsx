@@ -1,10 +1,10 @@
 /**
  * Seção de autoridade com foto dos especialistas e logos de marketplaces.
  */
-import especialistasImg from "../../assets/especialistas.png";
-import mercadoLivreLogo from "../../assets/logos/mercado-livre.svg";
-import shopeeLogo from "../../assets/logos/shopee.png";
-import amazonLogo from "../../assets/logos/amazon.png";
+import especialistasImg from "../assets/especialistas.png";
+import mercadoLivreLogo from "../assets/logos/mercado-livre.svg";
+import shopeeLogo from "../assets/logos/shopee.png";
+import amazonLogo from "../assets/logos/amazon.png";
 
 /**
  * Lista de marketplaces atendidos.
