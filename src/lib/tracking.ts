@@ -11,6 +11,7 @@ export type TrackingData = {
 
 const TRACKING_STORAGE_KEY = "diagnosticoads:tracking";
 
+// Valores padrao aplicados quando ainda nao existe tracking persistido.
 const DEFAULT_TRACKING: TrackingData = {
   channel: "direto",
   source: "direto",
@@ -18,6 +19,12 @@ const DEFAULT_TRACKING: TrackingData = {
   campaign: "none",
 };
 
+/**
+ * Recupera os dados de tracking armazenados pelo script de origem.
+ * Em cenarios SSR ou falha de parse, retorna fallback padrao.
+ *
+ * @returns Objeto com canal e UTMs usados no envio de lead.
+ */
 export const getTrackingData = (): TrackingData => {
   if (typeof window === "undefined") return { ...DEFAULT_TRACKING };
   try {

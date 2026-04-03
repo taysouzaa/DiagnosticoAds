@@ -1,8 +1,11 @@
-
+  
   <!DOCTYPE html>
   <!--
-    Documento de entrada padrão para desenvolvimento local.
-    O React monta a aplicação no elemento #root.
+    Arquivo de entrada da landing page em ambiente local.
+    Responsabilidades:
+    1) Disponibilizar o container #root para o React.
+    2) Inicializar o rastreamento de origem (Tracking.init).
+    3) Carregar o bundle principal da aplicação via Vite.
   -->
   <html lang="pt-BR">
     <head>
@@ -20,8 +23,10 @@
       <div id="root"></div>
       <script src="./tracking.js"></script>
       <script>
+        // Evita dupla inicializacao quando o script for injetado mais de uma vez.
         if (window.Tracking && !window.__trackingInitDone) {
           window.Tracking.init();
+          // Flag global para tornar o bootstrap idempotente.
           window.__trackingInitDone = true;
         }
       </script>

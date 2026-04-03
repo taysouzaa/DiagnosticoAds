@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Documento de entrada usado no build (Rollup input).
-  Mantém o ponto de montagem do React em #root.
+  Snapshot de deploy para HostGator (artefato gerado).
+  Responsabilidades:
+  1) Entregar HTML final com assets versionados.
+  2) Inicializar tracking antes do runtime React.
+  3) Servir como fallback principal para reescrita de rotas.
 -->
 <html lang="en">
   <head>
@@ -17,8 +20,10 @@
     <div id="root"></div>
     <script src="./tracking.js"></script>
     <script>
+      // Evita dupla inicializacao quando o script for injetado mais de uma vez.
       if (window.Tracking && !window.__trackingInitDone) {
         window.Tracking.init();
+        // Flag global para tornar o bootstrap idempotente.
         window.__trackingInitDone = true;
       }
     </script>

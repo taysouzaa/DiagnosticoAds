@@ -1,9 +1,14 @@
-// tracking.js - rastreamento leve de origem (channel + UTMs) para paginas estaticas
+/*
+ * Modulo de rastreamento leve para paginas estaticas.
+ * Resolve origem por query string/referrer e persiste canal + UTMs no localStorage.
+ */
 (() => {
   if (typeof window === "undefined") return;
   if (window.Tracking) return;
 
+  // Chave unica para reaproveitar os dados de origem durante toda a sessao.
   const STORAGE_KEY = "diagnosticoads:tracking";
+  // Fallback aplicado quando nao ha UTM ou referrer reconhecido.
   const DEFAULTS = {
     channel: "direto",
     source: "direto",
@@ -17,6 +22,11 @@
     { channel: "instagram", hosts: ["instagram.com", "l.instagram.com"] },
   ];
 
+  /**
+   * Retorna acesso seguro ao localStorage em navegadores que permitem persistencia.
+   *
+   * @returns Storage|null
+   */
   const safeStorage = () => {
     try {
       return window.localStorage;
@@ -25,13 +35,23 @@
     }
   };
 
+  /**
+   * Normaliza valores textuais de query params.
+   *
+   * @param {unknown} value - Valor bruto recebido da URL.
+   * @returns {string|null} Texto limpo ou null quando vazio/invalido.
+   */
   const normalize = (value) => {
     if (typeof value !== "string") return null;
     const trimmed = value.trim();
     return trimmed.length ? trimmed : null;
   };
 
-  // Função isolada para parsing da URL.
+  /**
+   * Extrai channel e UTMs diretamente da URL atual.
+   *
+   * @returns {{channel?: string|null, utm_source?: string|null, utm_medium?: string|null, utm_campaign?: string|null}}
+   */
   const parseFromUrl = () => {
     try {
       const params = new URLSearchParams(window.location.search);
@@ -46,6 +66,11 @@
     }
   };
 
+  /**
+   * Identifica canal com base no dominio de referencia (referrer).
+   *
+   * @returns {string|null} Canal mapeado ou null quando nao identificado.
+   */
   const channelFromReferrer = () => {
     const referrer = (document.referrer || "").toLowerCase();
     if (!referrer) return null;
@@ -57,6 +82,11 @@
     return null;
   };
 
+  /**
+   * Consolida dados de tracking em um formato unico para persistencia.
+   *
+   * @returns {{channel: string, source: string, medium: string, campaign: string}}
+   */
   const buildTracking = () => {
     const fromUrl = parseFromUrl();
     let channel = fromUrl.channel || channelFromReferrer();
@@ -78,6 +108,11 @@
     };
   };
 
+  /**
+   * Le o objeto persistido no navegador.
+   *
+   * @returns {Record<string, unknown>|null}
+   */
   const readStored = () => {
     const storage = safeStorage();
     if (!storage) return null;
@@ -91,6 +126,12 @@
     }
   };
 
+  /**
+   * Persiste o tracking calculado para reaproveitar em paginas/formularios.
+   *
+   * @param {Record<string, unknown>} data - Payload de tracking consolidado.
+   * @returns {void}
+   */
   const persist = (data) => {
     const storage = safeStorage();
     if (!storage) return;
@@ -101,7 +142,11 @@
     }
   };
 
-  // Inicializa sem sobrescrever se ja existir (persistencia).
+  /**
+   * Inicializa o tracking sem sobrescrever dados ja persistidos.
+   *
+   * @returns {Record<string, unknown>} Tracking efetivo da sessao.
+   */
   const init = () => {
     const existing = readStored();
     if (existing) return existing;
@@ -110,11 +155,17 @@
     return data;
   };
 
+  /**
+   * Recupera o tracking pronto para consumo por integracoes.
+   *
+   * @returns {{channel: string, source: string, medium: string, campaign: string}}
+   */
   const get = () => {
     const stored = readStored();
     return stored ? { ...DEFAULTS, ...stored } : { ...DEFAULTS };
   };
 
+  // API publica usada pelo HTML e pelo formulario para envio ao webhook.
   window.Tracking = {
     init,
     get,

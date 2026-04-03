@@ -1,3 +1,4 @@
+/* Arquivo JavaScript de build (minificado) gerado pelo Vite para deploy HostGator. */
 (function(){const A=document.createElement("link").relList;if(A&&A.supports&&A.supports("modulepreload"))return;for(const F of document.querySelectorAll('link[rel="modulepreload"]'))Ce(F);new MutationObserver(F=>{for(const G of F)if(G.type==="childList")for(const se of G.addedNodes)se.tagName==="LINK"&&se.rel==="modulepreload"&&Ce(se)}).observe(document,{childList:!0,subtree:!0});function h(F){const G={};return F.integrity&&(G.integrity=F.integrity),F.referrerPolicy&&(G.referrerPolicy=F.referrerPolicy),F.crossOrigin==="use-credentials"?G.credentials="include":F.crossOrigin==="anonymous"?G.credentials="omit":G.credentials="same-origin",G}function Ce(F){if(F.ep)return;F.ep=!0;const G=h(F);fetch(F.href,G)}})();var Ci={exports:{}},xr={},ji={exports:{}},O={};/**
  * @license React
  * react.production.min.js

@@ -41,6 +41,7 @@ const marketplaceOptions: MarketplaceOption[] = [
   { id: "outros", label: "Outros" },
 ];
 
+// Mapa auxiliar para converter ids internos em labels legiveis no payload do webhook.
 const marketplaceLabelsById = Object.fromEntries(
   marketplaceOptions.map((option) => [option.id, option.label]),
 ) as Record<string, string>;
@@ -106,11 +107,23 @@ const floatingLogos: FloatingLogo[] = [
   },
 ];
 
+/**
+ * Aplica destaque visual de foco no campo do formulario.
+ *
+ * @param event - Evento de foco do input.
+ * @returns void
+ */
 const handleFieldFocus = (event: React.FocusEvent<HTMLInputElement>) => {
   event.currentTarget.style.borderColor = "rgba(186,255,0,0.6)";
   event.currentTarget.style.boxShadow = "0 0 0 3px rgba(186,255,0,0.12)";
 };
 
+/**
+ * Restaura o estilo base do campo apos perder foco.
+ *
+ * @param event - Evento de blur do input.
+ * @returns void
+ */
 const handleFieldBlur = (event: React.FocusEvent<HTMLInputElement>) => {
   event.currentTarget.style.borderColor = "var(--lp-border)";
   event.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.02)";
@@ -169,6 +182,7 @@ export function FormSection() {
         "Data de entrada de leads": date,
         Data: date,
         Hora: time,
+        // Mantemos labels textuais para facilitar leitura/automacao no n8n e na planilha.
         "Quais marketplaces você anuncia": selectedLabels,
         Funil: "DiagnosticoAds",
         channel: tracking.channel,

@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <!--
-  Documento de entrada usado no build (Rollup input).
-  Mantém o ponto de montagem do React em #root.
+  Arquivo de entrada usado no build de producao (Rollup input).
+  Responsabilidades:
+  1) Manter o ponto de montagem #root para o React.
+  2) Inicializar tracking antes da execucao da aplicacao.
+  3) Carregar o bundle modular gerado pelo Vite.
 -->
 <html lang="pt-BR">
   <head>
@@ -19,8 +22,10 @@
     <div id="root"></div>
     <script src="./tracking.js"></script>
     <script>
+      // Evita dupla inicializacao quando o script for injetado mais de uma vez.
       if (window.Tracking && !window.__trackingInitDone) {
         window.Tracking.init();
+        // Flag global para tornar o bootstrap idempotente.
         window.__trackingInitDone = true;
       }
     </script>
