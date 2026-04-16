@@ -20,7 +20,7 @@ O **DiagnosticoAds** foi desenhado para transformar tráfego em leads qualificad
 - Entrega o lead para automação operacional (n8n) com baixa fricção.
 
 ## O Que Foi Desenvolvido
-### 1. Captação e Tracking
+### 1. Captação e Tracking 
 - Captura de origem (`channel`, `source`, `medium`, `campaign`) via script de bootstrap.
 - Persistência de tracking no navegador para reaproveitamento no submit.
 
