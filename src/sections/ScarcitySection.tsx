@@ -23,14 +23,13 @@ export function ScarcitySection() {
 
         <div className="scarcity-layout grid grid-cols-1 lg:grid-cols-[1.18fr_0.82fr] items-start">
           <div
-            className="soft-panel motion-reveal delay-1 scarcity-video-panel"
+            className="soft-panel motion-reveal delay-1"
             style={{
               overflow: "hidden",
               borderColor: "rgba(149,175,211,0.34)",
               background: "rgba(7,17,33,0.88)",
             }}
           >
-            <p className="scarcity-panel-title">Vídeo da análise</p>
             <div className="relative w-full aspect-video">
               {isPlaying ? (
                 <iframe
