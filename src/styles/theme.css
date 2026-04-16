@@ -532,11 +532,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 0.38rem 0.76rem;
+  padding: 0.33rem 0.68rem;
   border-radius: 999px;
   font-family: "Sora", sans-serif;
-  font-size: 0.72rem;
-  letter-spacing: 0.09em;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #d2ff73;
   border: 1px solid rgba(171, 255, 16, 0.3);
@@ -561,6 +561,19 @@
 .section-heading-block {
   display: grid;
   gap: 0.58rem;
+  justify-items: start;
+}
+
+.section-heading-block .section-tag {
+  justify-self: start;
+}
+
+.section-heading-block.text-center {
+  justify-items: center;
+}
+
+.section-heading-block.text-center .section-tag {
+  justify-self: center;
 }
 
 .section-title,
@@ -1005,19 +1018,28 @@
     line-height: 1.18;
   }
 
+  .hero-headline {
+    line-height: 1.14;
+    letter-spacing: -0.006em;
+  }
+
   .section-text {
     font-size: 1rem;
     line-height: 1.62;
   }
 
   .section-tag {
-    font-size: 0.67rem;
-    letter-spacing: 0.08em;
-    padding: 0.34rem 0.66rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+    padding: 0.28rem 0.56rem;
   }
 
   .section-heading-block {
     gap: 0.52rem;
+  }
+
+  .section-heading-block .section-tag {
+    justify-self: center;
   }
 
   .section-heading-block .section-title,

@@ -17,9 +17,9 @@ export function HeroSection() {
           </p>
 
           <h1 className="section-title hero-headline mx-auto">
-            Se o conteúdo do vídeo fez sentido para você,
+            Se o conteúdo do vídeo fez sentido para você,{" "}
             <br className="hero-break" />
-            <span style={{ color: "var(--lp-accent)" }}>o próximo passo é aplicar isso</span>
+            <span style={{ color: "var(--lp-accent)" }}>o próximo passo é aplicar isso</span>{" "}
             <br className="hero-break" />
             diretamente em sua conta.
           </h1>
