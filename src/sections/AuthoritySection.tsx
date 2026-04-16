@@ -3,12 +3,18 @@
  */
 import especialistasImg from "../assets/especialistas.png";
 
+// Pontos de prova apresentados para reduzir objeções antes do CTA final.
 const authorityPoints = [
   "Diagnóstico de estrutura, verba e rentabilidade por canal.",
   "Prioridades de otimização com impacto direto em margem.",
   "Recomendações práticas para executar nos próximos 7 dias.",
 ];
 
+/**
+ * Apresenta prova social e contexto de especialidade da equipe.
+ *
+ * @returns JSX.Element
+ */
 export function AuthoritySection() {
   return (
     <section className="section-wrap section-wrap--authority">

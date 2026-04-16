@@ -1,0 +1,23 @@
+# HostGator/Apache static deploy for DiagnosticoAds
+DirectoryIndex index.html ads.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Forca HTTPS
+  RewriteCond %{HTTPS} !=on
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Atalhos de canal (preserva UTM e demais query params)
+  RewriteRule ^youtube/?$ /?channel=youtube [L,QSA]
+  RewriteRule ^instagram/?$ /?channel=instagram [L,QSA]
+
+  # Nao reescreve arquivos reais do build
+  RewriteRule ^(index\.html|ads\.html|tracking\.js|01\.png)$ - [L]
+  RewriteRule ^ads-assets/ - [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

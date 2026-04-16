@@ -1,237 +1,131 @@
-# DOCUMENTAÇÃO OFICIAL DO PROJETO
+# DiagnosticoAds
 
-## AUTORA
+> Landing page privada para captação e qualificação de leads de diagnóstico estratégico em marketplaces.
 
-Taynara Correia de Souza
+![Status](https://img.shields.io/badge/status-projeto%20privado-8b0000)
+![Frontend](https://img.shields.io/badge/frontend-React%2018%20%2B%20Vite%206-1f6feb)
+![Automação](https://img.shields.io/badge/automacao-n8n%20Webhook-0f766e)
+![Deploy](https://img.shields.io/badge/deploy-Vercel%20%2F%20HostGator-7c3aed)
 
-## CONTATO
+README de apresentação para GitHub.  
+A documentação técnica oficial e completa permanece em [docs/DOCUMENTACAO_OFICIAL.md](./docs/DOCUMENTACAO_OFICIAL.md).
 
-[taynara.souza.dev@gmail.com](mailto:taynara.souza.dev@gmail.com)  
-+55 (19) 93500-3600
+## Visão do Projeto
+O **DiagnosticoAds** foi desenhado para transformar tráfego em leads qualificados, conectando aquisição, coleta de dados e agendamento comercial em um único fluxo.
 
----
+### O que o sistema resolve
+- Evita perda de lead entre formulário e agendamento.
+- Centraliza captação com dados de contexto comercial.
+- Preserva origem de tráfego para análise de performance.
+- Entrega o lead para automação operacional (n8n) com baixa fricção.
 
-## 1. Resumo do Projeto
+## O Que Foi Desenvolvido
+### 1. Captação e Tracking
+- Captura de origem (`channel`, `source`, `medium`, `campaign`) via script de bootstrap.
+- Persistência de tracking no navegador para reaproveitamento no submit.
 
-O `LP-diagnostico` é uma landing page de captação de leads para diagnóstico de anúncios em marketplaces. O sistema resolve a necessidade de transformar tráfego em agendamento qualificado com baixa fricção: captura dados do formulário, preserva metadados de origem (UTM/canal), envia para webhook do n8n e redireciona para agenda.
+### 2. Formulário de Qualificação
+- Captura de nome, e-mail, WhatsApp, faixa de investimento e canais de venda.
+- Validação local de consistência de telefone.
+- Interface responsiva para mobile e desktop.
 
-| Item | Descrição |
+### 3. Integração com Automação
+- Envio de payload para webhook n8n.
+- Estratégia resiliente de envio: `sendBeacon` com fallback `fetch keepalive`.
+- Redirecionamento para agenda após tentativa de envio.
+
+### 4. Jornada de Conversão
+- Sequência de seções orientada à tomada de decisão.
+- CTA principal para agendamento imediato.
+- Blocos de autoridade, análise e escassez para qualificação de interesse.
+
+## Stack Técnica
+- **Frontend:** React 18, TypeScript, Vite 6
+- **UI/Estilos:** CSS custom, Tailwind CSS v4, tw-animate-css
+- **Integração:** Webhook n8n + redirecionamento Google Calendar
+- **Deploy:** Vercel + build estático para HostGator/cPanel
+
+## Arquitetura (Resumo)
+| Camada | Responsabilidade |
 | --- | --- |
-| Problema resolvido | Falta de fluxo padronizado para captar e qualificar leads de diagnóstico |
-| Objetivo principal | Converter tráfego em solicitações de análise estratégica |
-| Tipo de aplicação | Front-end SPA estática (React + Vite) |
+| `src/sections` | Seções funcionais da landing (narrativa e conversão) |
+| `src/lib` | Regras utilitárias (tracking e WhatsApp) |
+| `src/config` | Configuração de runtime por variáveis de ambiente |
+| `src/styles` | Tema, tipografia e responsividade |
+| `public` | Scripts/arquivos estáticos de apoio ao deploy |
 
----
+## Funcionamento do Sistema
+1. Usuário acessa a LP.
+2. Script de tracking inicializa e persiste origem da sessão.
+3. Usuário preenche formulário de qualificação.
+4. Aplicação monta payload com dados de contato + tracking.
+5. Lead é enviado ao webhook n8n.
+6. Usuário é redirecionado para agendamento.
 
-## 2. Contexto e Finalidade do Sistema
+```mermaid
+flowchart LR
+    A[Acesso à LP] --> B[Tracking da origem]
+    B --> C[Preenchimento do formulário]
+    C --> D[Montagem do payload]
+    D --> E[Envio para webhook n8n]
+    D --> F[Redirecionamento para agenda]
+    E --> G[Processamento comercial no destino]
+```
 
-| Tópico | Detalhamento |
-| --- | --- |
-| Finalidade | Capturar leads e encaminhar para operação comercial/consultiva |
-| Público que utiliza | Potenciais clientes de diagnóstico de Ads (marketplaces) |
-| Cenário de aplicação | Campanhas de aquisição com URL rastreável e CTA para formulário |
+## Diferenciais de Engenharia
+- Captura de tracking antes do bootstrap do React.
+- Envio resiliente para reduzir perda de lead na navegação.
+- Estrutura enxuta e modular para manutenção rápida.
+- Build preparado para Vercel e publicação estática em HostGator.
 
----
-
-## 3. Arquitetura do Sistema
-
-Arquitetura orientada a front-end estático com integração outbound:
-
-1. `index.html`/`ads.html` inicializa `tracking.js`.
-2. `Tracking.init()` registra canal e UTM em `localStorage`.
-3. React monta a SPA (`src/main.tsx` + `src/App.tsx`).
-4. `FormSection` monta payload, envia para webhook e redireciona para agenda.
-
-| Camada | Responsabilidade | Arquivos |
-| --- | --- | --- |
-| Bootstrap | Carregar app e rastreamento | `index.html`, `ads.html`, `public/tracking.js` |
-| UI | Renderizar jornada de conversão | `src/sections/*.tsx`, `src/App.tsx` |
-| Configuração | Resolver URLs por ambiente | `src/config/runtime.ts`, `.env.*` |
-| Utilitários | Tracking e formatação de WhatsApp | `src/lib/tracking.ts`, `src/lib/whatsapp.ts` |
-| Build/Deploy | Geração de artefato estático | `vite.config.ts`, `vercel.json`, `deploy/hostgator/*` |
-
----
-
-## 4. Tecnologias Utilizadas
-
-| Categoria | Stack identificada no código |
-| --- | --- |
-| Linguagens | TypeScript, JavaScript, CSS, HTML |
-| Frameworks/Bibliotecas | React 18.3.1, React DOM 18.3.1, Vite 6, Tailwind CSS v4, `tw-animate-css` |
-| Ferramentas de automação | npm scripts (`dev`, `build`, `postbuild`) |
-| Infraestrutura | Vercel (`vercel.json`) e estrutura paralela para HostGator (`deploy/hostgator`) |
-| Banco de dados | Não há banco no front-end; persistência é delegada ao workflow externo (n8n) |
-
----
-
-## 5. Estrutura do Projeto
-
+## Estrutura do Projeto
 ```text
 .
 ├─ src/
-│  ├─ assets/                 # imagens e logos
-│  ├─ config/runtime.ts       # leitura de VITE_* com fallback
-│  ├─ lib/                    # utilitários de tracking e máscara
-│  ├─ sections/               # seções da landing page
-│  ├─ styles/                 # tema global, fontes e Tailwind
-│  ├─ App.tsx                 # composição da página
-│  └─ main.tsx                # bootstrap React
+│  ├─ assets/
+│  ├─ config/
+│  ├─ lib/
+│  ├─ sections/
+│  ├─ styles/
+│  ├─ App.tsx
+│  └─ main.tsx
 ├─ public/
-│  ├─ tracking.js             # captura de origem (UTM/referrer)
-│  └─ htaccess-hostgator.txt  # regras de rewrite para Apache
-├─ deploy/hostgator/          # pacote de publicação manual para HostGator
-├─ docs/                      # documentação técnica do projeto
-├─ ads.html                   # entrada de build
-├─ index.html                 # entrada de desenvolvimento/local
-├─ vite.config.ts             # build e plugins
-└─ vercel.json                # configuração de deploy na Vercel
+│  ├─ 01.png
+│  ├─ tracking.js
+│  └─ htaccess-hostgator.txt
+├─ docs/
+│  ├─ DOCUMENTACAO_OFICIAL.md
+│  ├─ TECHNICAL_GUIDE.md
+│  ├─ AUTOMACAO_N8N.md
+│  ├─ ENGINEERING_REVIEW.md
+│  └─ DIAGRAMS.md
+├─ ads.html
+├─ index.html
+├─ vite.config.ts
+├─ vercel.json
+└─ .env.example
 ```
 
----
-
-## 6. Funcionamento do Sistema
-
-| Etapa | Implementação | Resultado |
-| --- | --- | --- |
-| Entrada de dados | Campos obrigatórios de nome, e-mail, WhatsApp e seleção de marketplaces | Dados de lead estruturados |
-| Processamento | Normalização de WhatsApp, leitura de UTM/canal de `localStorage`, montagem de payload JSON | Payload pronto para automação |
-| Integrações externas | POST para webhook n8n + redirecionamento para Google Calendar | Lead encaminhado e usuário segue para agendamento |
-| Geração de resultado | Conversão em evento de lead e continuidade da jornada comercial | Continuidade operacional do funil |
-
----
-
-## 7. Integrações e APIs
-
-| Integração | Finalidade | Autenticação observada no código | Fluxo de comunicação |
-| --- | --- | --- | --- |
-| Webhook n8n (`VITE_LEAD_WEBHOOK_URL`) | Receber payload do lead | Não há token/chave no front-end | Navegador envia `POST` (`sendBeacon` ou `fetch no-cors`) |
-| Google Calendar (`VITE_CALENDAR_URL`) | Abrir agenda após envio | Não aplicável | `window.location.assign(calendarUrl)` |
-| YouTube Embed | Exibir vídeo explicativo | Não aplicável | `iframe` com `https://www.youtube.com/embed/...` |
-| Google Fonts | Carregar fonte Inter | Não aplicável | `@import` CSS em `src/styles/fonts.css` |
-
----
-
-## 8. Automação Implementada no Projeto
-
-| Automação | Problema que resolve | Arquivos envolvidos | Entrada | Saída |
-| --- | --- | --- | --- | --- |
-| Tracking de origem | Preservar canal/UTM para atribuição | `public/tracking.js`, `src/lib/tracking.ts` | Query params e referrer | Objeto persistido em `localStorage` |
-| Envio resiliente do lead | Reduzir perda de envio durante redirecionamento | `src/sections/FormSection.tsx` | Payload do formulário | Evento no webhook n8n + redirect |
-| Pós-build (`postbuild`) | Garantir `index.html` em `dist` para compatibilidade de host | `package.json` | `dist/ads.html` | `dist/index.html` copiado |
-
-Fluxo resumido de execução:
-
-```text
-visitante -> tracking.js -> localStorage -> formulário -> webhook n8n -> agenda
-```
-
----
-
-## 9. Configuração e Execução do Sistema
-
-Pré-requisitos:
-
-| Dependência | Versão recomendada |
-| --- | --- |
-| Node.js | 18+ |
-| npm | 9+ |
-
-Instalação e execução local:
-
+## Execução Local
 ```bash
 npm install
-cp .env.example .env.local
 npm run dev
 ```
 
-Build de produção:
-
+## Build de Produção
 ```bash
 npm run build
 ```
 
-Scripts disponíveis:
+## Variáveis de Ambiente (Essencial)
+- `VITE_CALENDAR_URL`
+- `VITE_LEAD_WEBHOOK_URL`
 
-| Comando | Finalidade |
-| --- | --- |
-| `npm run dev` | Inicia servidor Vite de desenvolvimento |
-| `npm run build` | Gera build de produção (`dist/`) |
-| `npm run postbuild` | Copia `dist/ads.html` para `dist/index.html` |
+Base de configuração: [.env.example](./.env.example)
 
----
+## Deploy
+- **Vercel:** integração com repositório para deploy contínuo.
+- **HostGator/cPanel:** publicação manual dos arquivos de build estático.
 
-## 10. Variáveis de Ambiente
-
-Variáveis encontradas no código-fonte:
-
-| Variável | Função | Onde é usada |
-| --- | --- | --- |
-| `VITE_CALENDAR_URL` | URL de redirecionamento após envio do lead | `src/config/runtime.ts` |
-| `VITE_LEAD_WEBHOOK_URL` | Endpoint de captura do lead no n8n | `src/config/runtime.ts` e `src/sections/FormSection.tsx` |
-
-Exemplo de arquivo `.env.local`:
-
-```env
-VITE_CALENDAR_URL=
-VITE_LEAD_WEBHOOK_URL=
-```
-
-Nunca incluir credenciais reais no repositório.
-
----
-
-## 11. Segurança
-
-| Pilar | Estado atual identificado |
-| --- | --- |
-| Autenticação | Não existe autenticação no front-end para envio ao webhook |
-| Validação de dados | Validação básica HTML + normalização de telefone |
-| Controle de acesso | Não há camada de backend/proxy para proteger endpoint |
-| Proteção contra uso indevido | Não há CAPTCHA, assinatura de payload ou rate limiting no cliente |
-
-Recomendação mínima para produção corporativa: proxy backend com assinatura/verificação do payload, rate limiting e anti-bot no fluxo de formulário.
-
----
-
-## 12. Licença de Uso do Software
-
-LICENÇA PADRÃO DOS PROJETOS
-
-ACORDO DE LICENÇA DE SOFTWARE
-
-Copyright (c) 2026 Taynara Correia de Souza  
-Todos os direitos reservados.
-
-AUTORA  
-Taynara Correia de Souza  
-Email: taynara.souza.dev@gmail.com  
-Telefone / WhatsApp: +55 (19) 93500-3600
-
-TITULARIDADE  
-Este software e seu código-fonte são propriedade intelectual exclusiva de Taynara Correia de Souza e estão protegidos pelas leis de direitos autorais, incluindo a Lei de Software Brasileira (Lei nº 9.609/1998) e tratados internacionais de direitos autorais.
-
-RESTRIÇÕES DE LICENÇA  
-Sem autorização expressa e por escrito da autora, nenhuma pessoa ou organização está autorizada a:
-
-1. Copiar este software.
-2. Modificar este software.
-3. Redistribuir este software.
-4. Utilizar este software comercialmente.
-5. Incorporar este software em outros projetos.
-6. Reproduzir qualquer parte do código.
-
-EXIBIÇÃO EM PORTFÓLIO  
-Este repositório é publicado exclusivamente para demonstrar trabalho profissional e capacidade técnica.  
-A visualização do código para fins educacionais ou de avaliação é permitida; porém, qualquer forma de reutilização, distribuição, modificação ou aplicação comercial é estritamente proibida sem autorização prévia e por escrito.
-
-SOLICITAÇÕES DE PERMISSÃO  
-Para solicitar permissão de uso, modificação ou licenciamento, entre em contato:  
-Taynara Correia de Souza  
-taynara.souza.dev@gmail.com
-
-RESPONSABILIDADE  
-Este software é fornecido "no estado em que se encontra", sem garantia de qualquer tipo.  
-A autora não poderá ser responsabilizada por quaisquer danos resultantes de seu uso.
-
-ACEITAÇÃO  
-Ao acessar este repositório, você concorda com os termos desta licença.
+## Licença
+A licença **permanece inalterada** e segue os termos proprietários definidos em [LICENSE](./LICENSE).

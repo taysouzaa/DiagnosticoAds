@@ -2,6 +2,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  /* Tokens base do layout e identidade visual da LP. */
   --font-size: 16px;
   --topbar-height: 62px;
   --lp-bg: #061022;
@@ -117,6 +118,7 @@
 }
 
 .page-main::before {
+  /* Textura de fundo compartilhada entre as seções para dar continuidade visual. */
   content: "";
   position: absolute;
   inset: 0;
@@ -283,6 +285,7 @@
 }
 
 .section-wrap {
+  /* Espaçamento principal das seções (ajustado via variáveis responsivas). */
   position: relative;
   padding: var(--section-block-space) var(--section-inline-space);
   scroll-margin-top: 88px;
@@ -320,6 +323,7 @@
 }
 
 .section-wrap + .section-wrap::before {
+  /* Linha separadora entre blocos para melhorar percepção de seções no mobile. */
   content: "";
   position: absolute;
   top: 0;
@@ -835,6 +839,7 @@
 }
 
 .form-logo-rain {
+  /* Camada decorativa de logos com animação de queda no fundo do formulário. */
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -958,6 +963,7 @@
 }
 
 @media (max-width: 640px) {
+  /* Ajustes críticos de legibilidade e densidade para telas pequenas. */
   html {
     font-size: 15px;
     scroll-behavior: auto;

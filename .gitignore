@@ -1,6 +1,8 @@
 node_modules/
 dist/
 .vercel/
+deploy/
+.vscode/
 .env
 .env.*
 !.env.example

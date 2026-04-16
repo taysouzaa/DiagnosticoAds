@@ -16,6 +16,10 @@ type MarketplaceOption = {
   logo?: string;
 };
 
+/**
+ * Configuração visual dos logos em queda no fundo da seção de formulário.
+ * Esses metadados controlam animação (tempo, atraso, deriva e opacidade).
+ */
 type AmbientLogo = {
   src: string;
   size: number;
@@ -90,18 +94,29 @@ const marketplaceLabelsById = Object.fromEntries(
   marketplaceOptions.map((option) => [option.id, option.label]),
 ) as Record<string, string>;
 
+/**
+ * Realça o campo ativo para melhorar feedback de foco em mobile e desktop.
+ */
 const handleFieldFocus = (event: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
   event.currentTarget.style.borderColor = "rgba(171,255,16,0.7)";
   event.currentTarget.style.boxShadow = "0 0 0 3px rgba(171,255,16,0.16)";
   event.currentTarget.style.backgroundColor = "rgba(6,18,36,0.96)";
 };
 
+/**
+ * Restaura o estilo padrão quando o campo perde foco.
+ */
 const handleFieldBlur = (event: FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
   event.currentTarget.style.borderColor = "rgba(122,150,186,0.45)";
   event.currentTarget.style.boxShadow = "none";
   event.currentTarget.style.backgroundColor = "rgba(8,20,39,0.92)";
 };
 
+/**
+ * Renderiza formulário principal de captação e executa o fluxo de envio.
+ *
+ * @returns JSX.Element
+ */
 export function FormSection() {
   const { calendarUrl, leadWebhookUrl } = APP_CONFIG;
 
@@ -116,12 +131,23 @@ export function FormSection() {
   const hasWhatsappMismatch =
     confirmWhatsapp.length > 0 && toDigits(whatsapp) !== toDigits(confirmWhatsapp);
 
+  /**
+   * Adiciona ou remove marketplaces selecionados no estado local.
+   *
+   * @param id - Identificador único do marketplace clicado.
+   */
   const toggleMarketplace = (id: string) => {
     setSelected((previous) =>
       previous.includes(id) ? previous.filter((item) => item !== id) : [...previous, id],
     );
   };
 
+  /**
+   * Envia o lead para o webhook (n8n) e redireciona para a agenda.
+   * O fluxo prioriza sendBeacon para reduzir perda de dados no redirect.
+   *
+   * @param event - Evento de submit do formulário HTML.
+   */
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
@@ -159,6 +185,7 @@ export function FormSection() {
       if (leadWebhookUrl) {
         const body = JSON.stringify(payload);
 
+        // Estratégia 1: envio resiliente durante troca de página.
         let sent = false;
         if (navigator.sendBeacon) {
           sent = navigator.sendBeacon(
@@ -167,6 +194,7 @@ export function FormSection() {
           );
         }
 
+        // Estratégia 2 (fallback): fetch com keepalive e timeout curto.
         if (!sent) {
           await Promise.race([
             fetch(leadWebhookUrl, {
@@ -185,6 +213,7 @@ export function FormSection() {
     } catch (error) {
       console.error("[DiagnosticoAds] Falha no envio do lead:", error);
     } finally {
+      // O redirecionamento sempre ocorre para manter o fluxo comercial.
       window.location.assign(calendarUrl);
     }
   };

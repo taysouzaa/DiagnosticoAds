@@ -4,8 +4,15 @@
 import { useState } from "react";
 import videoCover from "../assets/video-capa.png";
 
+/**
+ * Mostra o vídeo explicativo e reforça a limitação de agenda.
+ *
+ * @returns JSX.Element
+ */
 export function ScarcitySection() {
+  // ID do vídeo principal usado na etapa de qualificação do lead.
   const videoId = "ZP3qVjw32es";
+  // Controla o swap de thumbnail estática para iframe com autoplay.
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (

@@ -1,6 +1,8 @@
 {
   "markdown-pdf.styles": [
-    "style.css"
+    "docs/pdf-print.css"
   ],
-  "markdown-pdf.includeDefaultStyles": false
+  "markdown-pdf.includeDefaultStyles": false,
+  "markdown-pdf.format": "A4",
+  "markdown-pdf.printBackground": true
 }

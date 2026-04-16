@@ -1,6 +1,7 @@
 /**
  * Seção de conteúdo: o que será analisado na chamada estratégica.
  */
+// Lista estática de entregáveis apresentada ao lead antes da conversão.
 const analysisItems = [
   {
     title: "Distribuição da verba por campanhas",
@@ -28,6 +29,11 @@ const analysisItems = [
   },
 ];
 
+/**
+ * Exibe os pontos que serão avaliados durante a chamada estratégica.
+ *
+ * @returns JSX.Element
+ */
 export function AnalysisSection() {
   return (
     <section id="analise" className="section-wrap section-wrap--analysis">
@@ -54,6 +60,7 @@ export function AnalysisSection() {
                 background: "linear-gradient(165deg, rgba(10,24,45,0.9), rgba(8,20,39,0.88))",
               }}
             >
+              {/* Índice visual para reforçar leitura sequencial dos tópicos. */}
               <span
                 style={{
                   width: "30px",

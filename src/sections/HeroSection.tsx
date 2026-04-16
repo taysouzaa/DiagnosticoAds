@@ -1,7 +1,16 @@
 /**
  * Seção Hero da landing page com proposta principal e CTA.
  */
+/**
+ * Renderiza o bloco inicial da página com mensagem principal e chamada para ação.
+ *
+ * @returns JSX.Element
+ */
 export function HeroSection() {
+  /**
+   * Faz rolagem programática para a seção de formulário.
+   * Mantém a navegação focada no objetivo principal de conversão.
+   */
   const scrollToForm = () => {
     document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
   };
