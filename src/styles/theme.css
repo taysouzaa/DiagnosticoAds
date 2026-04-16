@@ -725,6 +725,24 @@
   min-width: 0;
 }
 
+.market-button-icon-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+}
+
+.market-button-icon {
+  max-height: 18px;
+  width: auto;
+}
+
+.market-button-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
 .authority-photo-panel {
   overflow: hidden;
 }
@@ -942,6 +960,7 @@
 @media (max-width: 640px) {
   html {
     font-size: 15px;
+    scroll-behavior: auto;
   }
 
   .section-wrap {
@@ -1122,35 +1141,43 @@
   }
 
   .market-button {
-    min-height: 0;
-    aspect-ratio: 1 / 1;
-    flex-direction: column;
-    justify-content: center;
+    min-height: 62px;
+    flex-direction: row;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.36rem !important;
-    padding: 0.46rem 0.4rem !important;
-    border-radius: 12px !important;
+    gap: 0.48rem !important;
+    padding: 0.5rem 0.58rem !important;
+    border-radius: 10px !important;
   }
 
   .market-button-label {
-    font-size: 0.75rem;
+    font-size: 0.78rem;
     line-height: 1.16;
-    text-align: center;
+    text-align: left;
+  }
+
+  .market-button-icon-wrap {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+  }
+
+  .market-button-icon {
+    max-height: 14px;
+  }
+
+  .market-button-dot {
+    width: 6px;
+    height: 6px;
   }
 
   .form-channels-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.46rem;
   }
 
   .page-main > .section-wrap.section-wrap--form {
     min-height: auto;
-  }
-}
-
-@supports (height: 100dvh) {
-  :root {
-    --section-screen-min-height: calc(100dvh - var(--topbar-height));
   }
 }
 
@@ -1185,6 +1212,15 @@
 
   .form-channels-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .market-button {
+    min-height: 58px;
+    padding: 0.46rem 0.5rem !important;
+  }
+
+  .market-button-label {
+    font-size: 0.74rem;
   }
 
   .page-main > .section-wrap {

@@ -361,10 +361,8 @@ export function FormSection() {
                     >
                       {marketplace.logo ? (
                         <span
+                          className="market-button-icon-wrap"
                           style={{
-                            width: "30px",
-                            height: "30px",
-                            borderRadius: "8px",
                             border: "1px solid rgba(118,147,184,0.4)",
                             background: "rgba(16,35,61,0.86)",
                             display: "grid",
@@ -372,16 +370,17 @@ export function FormSection() {
                             flexShrink: 0,
                           }}
                         >
-                          <img src={marketplace.logo} alt={marketplace.label} style={{ maxHeight: "18px", width: "auto" }} />
+                          <img
+                            src={marketplace.logo}
+                            alt={marketplace.label}
+                            className="market-button-icon"
+                          />
                         </span>
                       ) : (
                         <span
+                          className="market-button-dot"
                           style={{
-                            width: "8px",
-                            height: "8px",
-                            borderRadius: "999px",
                             background: isSelected ? "#b7ff2b" : "#7e98ba",
-                            flexShrink: 0,
                           }}
                         />
                       )}
