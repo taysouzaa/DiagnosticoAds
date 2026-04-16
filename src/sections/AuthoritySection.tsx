@@ -23,7 +23,7 @@ export function AuthoritySection() {
     <section className="section-wrap section-wrap--authority">
       <div className="section-container grid grid-cols-1 lg:grid-cols-[1fr_1.05fr] gap-8 items-center">
         <div
-          className="soft-panel motion-reveal authority-photo-panel"
+          className="soft-panel motion-reveal authority-photo-panel order-2 lg:order-1"
           style={{
             padding: "1.05rem",
             borderColor: "rgba(171,255,16,0.18)",
@@ -40,7 +40,7 @@ export function AuthoritySection() {
           </div>
         </div>
 
-        <div className="motion-reveal delay-1">
+        <div className="section-heading-block motion-reveal delay-1 order-1 lg:order-2">
           <span className="section-tag">Especialistas</span>
           <h2 className="section-title">
             Nossos especialistas analisam contas

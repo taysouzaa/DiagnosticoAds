@@ -11,7 +11,7 @@ export function ScarcitySection() {
   return (
     <section className="section-wrap section-wrap--scarcity">
       <div className="section-container">
-        <div className="text-center max-w-3xl mx-auto mb-10 motion-reveal">
+        <div className="section-heading-block text-center max-w-3xl mx-auto mb-10 motion-reveal">
           <span className="section-tag">Próximo Passo</span>
           <h2 className="section-title">
             Assista ao vídeo e entenda o próximo passo da sua análise
@@ -23,13 +23,14 @@ export function ScarcitySection() {
 
         <div className="scarcity-layout grid grid-cols-1 lg:grid-cols-[1.18fr_0.82fr] items-start">
           <div
-            className="soft-panel motion-reveal delay-1"
+            className="soft-panel motion-reveal delay-1 scarcity-video-panel"
             style={{
               overflow: "hidden",
               borderColor: "rgba(149,175,211,0.34)",
               background: "rgba(7,17,33,0.88)",
             }}
           >
+            <p className="scarcity-panel-title">Vídeo da análise</p>
             <div className="relative w-full aspect-video">
               {isPlaying ? (
                 <iframe

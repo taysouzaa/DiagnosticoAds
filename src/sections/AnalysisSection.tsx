@@ -32,7 +32,7 @@ export function AnalysisSection() {
   return (
     <section id="analise" className="section-wrap section-wrap--analysis">
       <div className="section-container">
-        <div className="analysis-intro text-center max-w-3xl mx-auto mb-8 motion-reveal">
+        <div className="section-heading-block analysis-intro text-center max-w-3xl mx-auto mb-8 motion-reveal">
           <span className="section-tag">O que será analisado</span>
           <h2 className="section-title">
             Durante a chamada estratégica você vai descobrir
@@ -71,8 +71,10 @@ export function AnalysisSection() {
               >
                 {(index + 1).toString().padStart(2, "0")}
               </span>
-              <h3 style={{ margin: "0.75rem 0 0", fontSize: "1.08rem", lineHeight: 1.28 }}>{item.title}</h3>
-              <p style={{ margin: "0.45rem 0 0", color: "var(--lp-muted)", fontSize: "0.98rem", lineHeight: 1.6 }}>
+              <h3 className="analysis-card-title" style={{ margin: "0.75rem 0 0" }}>
+                {item.title}
+              </h3>
+              <p className="analysis-card-text" style={{ margin: "0.45rem 0 0", color: "var(--lp-muted)" }}>
                 {item.desc}
               </p>
             </article>

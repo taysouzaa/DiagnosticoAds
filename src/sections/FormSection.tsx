@@ -220,7 +220,7 @@ export function FormSection() {
 
       <div className="section-container relative z-20">
         <div className="soft-panel form-shell motion-reveal max-w-[780px] mx-auto">
-          <div className="text-center max-w-3xl mx-auto motion-reveal delay-1">
+          <div className="section-heading-block text-center max-w-3xl mx-auto motion-reveal delay-1">
             <span className="section-tag">Formulário</span>
             <h2 className="section-title">
               Solicite sua análise estratégica
