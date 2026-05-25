@@ -1,5 +1,11 @@
 # Log de alterações — LP-diagnostico
 
+## 2026-05-25 (tarde)
+
+- Webhook testado via POST — retornou `200 OK` com `{"message":"Workflow was started"}`. Endpoint confirmado ativo: `https://n8n.srv1095468.hstgr.cloud/webhook/Diagnostico-organico`.
+- `vercel.json` corrigido: adicionada regra de roteamento `"src": "/(.*)", "dest": "/ads.html"` para resolver erro 404 no Vercel (Vite gera `dist/ads.html`, não `dist/index.html`).
+- LICENSE: email de contato atualizado para `souza.codes@gmail.com`.
+
 ## 2026-05-25
 
 - Migração de React/TSX para HTML/CSS/JS puro concluída. Pasta `src/` removida.
