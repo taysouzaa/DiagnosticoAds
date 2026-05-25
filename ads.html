@@ -1653,13 +1653,27 @@
     const hora   = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
     const canais = [...document.querySelectorAll('#f-canais input[type="checkbox"]:checked')].map(c => c.value);
 
+    const nomeVal    = document.getElementById('f-nome').value.trim();
+    const emailVal   = document.getElementById('f-email').value.trim();
+    const wppVal     = document.getElementById('f-wpp').value.trim();
+    const wpp2Val    = document.getElementById('f-wpp2').value.trim();
+    const budgetVal  = document.getElementById('f-budget').value;
+
     const payload = {
-      'Nome completo':    document.getElementById('f-nome').value.trim(),
-      'E-mail':           document.getElementById('f-email').value.trim(),
-      'WhatsApp':         document.getElementById('f-wpp').value.trim(),
-      'Confirmar WhatsApp': document.getElementById('f-wpp2').value.trim(),
-      'Quanto você investe em publicidade nos marketplaces hoje?': document.getElementById('f-budget').value,
-      'Em quais canais':  canais,
+      // chaves sem espaço (mais seguras para qualquer webhook)
+      nome:                nomeVal,
+      email:               emailVal,
+      whatsapp:            wppVal,
+      whatsapp_confirmacao: wpp2Val,
+      investimento_mensal: budgetVal,
+      canais_marketplace:  canais,
+      // chaves legadas (compatibilidade com mapeamento N8N)
+      'Nome completo':     nomeVal,
+      'E-mail':            emailVal,
+      'WhatsApp':          wppVal,
+      'Confirmar WhatsApp': wpp2Val,
+      'Quanto você investe em publicidade nos marketplaces hoje?': budgetVal,
+      'Em quais canais':   canais,
       'Data de entrada de leads': dataBR,
       'Data': dataBR,
       'Hora': hora,
