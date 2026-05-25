@@ -1659,21 +1659,44 @@
     const wpp2Val    = document.getElementById('f-wpp2').value.trim();
     const budgetVal  = document.getElementById('f-budget').value;
 
+    const budgetLabel = {
+      nenhum:     'Não invisto ainda',
+      ate_5k:     'Até R$5.000/mês',
+      '5k_10k':   'R$5.000 a R$10.000/mês',
+      '10k_15k':  'R$10.000 a R$15.000/mês',
+      acima_15k:  'Mais de R$15.000/mês',
+    };
+    const canalLabel = {
+      mercado_livre: 'Mercado Livre',
+      shopee:        'Shopee',
+      amazon:        'Amazon',
+      magalu:        'Magalu',
+      outros:        'Outros',
+    };
+    const investimentoLegivel = budgetLabel[budgetVal] || budgetVal;
+    const canaisLegivel = canais.map(c => canalLabel[c] || c).join(', ');
+    const perguntaAdicional = [
+      investimentoLegivel ? `Investimento: ${investimentoLegivel}` : '',
+      canaisLegivel       ? `Canais: ${canaisLegivel}` : '',
+    ].filter(Boolean).join(' | ');
+
     const payload = {
       // chaves sem espaço (mais seguras para qualquer webhook)
       nome:                nomeVal,
       email:               emailVal,
       whatsapp:            wppVal,
       whatsapp_confirmacao: wpp2Val,
-      investimento_mensal: budgetVal,
-      canais_marketplace:  canais,
+      investimento_mensal: investimentoLegivel,
+      canais_marketplace:  canaisLegivel,
+      pergunta_adicional:  perguntaAdicional,
       // chaves legadas (compatibilidade com mapeamento N8N)
       'Nome completo':     nomeVal,
       'E-mail':            emailVal,
       'WhatsApp':          wppVal,
       'Confirmar WhatsApp': wpp2Val,
-      'Quanto você investe em publicidade nos marketplaces hoje?': budgetVal,
-      'Em quais canais':   canais,
+      'Quanto você investe em publicidade nos marketplaces hoje?': investimentoLegivel,
+      'Em quais canais':   canaisLegivel,
+      'Pergunta adicional': perguntaAdicional,
       'Data de entrada de leads': dataBR,
       'Data': dataBR,
       'Hora': hora,
