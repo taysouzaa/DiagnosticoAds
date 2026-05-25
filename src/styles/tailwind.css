@@ -1,6 +1,0 @@
-/* Camada de integração do Tailwind CSS v4 com fontes do projeto. */
-@import 'tailwindcss' source(none);
-@source '../**/*.{js,ts,jsx,tsx}';
-
-/* Utilitários extras de animação. */
-@import 'tw-animate-css';

@@ -10,3 +10,7 @@ deploy/
 npm-debug.log*
 pnpm-debug.log*
 yarn-error.log*
+
+# Build artifacts gerados automaticamente
+index.html
+ads-assets/
