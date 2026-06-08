@@ -64,7 +64,7 @@ O **LP DiagnósticoAds** foi construído para capturar e qualificar leads de tr�
 | `dist/` | Build gerado pelo Vite |
 | `assets/` | Imagens e ícones da LP |
 | `docs/` | Workflows, scripts e documentação técnica |
-| `n8n-workflow-diagnostico-organico.json` | Workflow n8n exportado |
+| `docs/n8n-workflow-diagnostico-organico.json` | Workflow n8n exportado |
 | `TECNICO.md` | Guia técnico de manutenção |
 
 ## Funcionamento do Sistema
@@ -122,7 +122,7 @@ flowchart LR
 ├─ package.json
 ├─ vite.config.ts
 ├─ vercel.json
-├─ n8n-workflow-diagnostico-organico.json
+├─ docs/n8n-workflow-diagnostico-organico.json
 ├─ TECNICO.md
 └─ LICENSE
 ```
