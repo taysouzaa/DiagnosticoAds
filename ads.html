@@ -1430,7 +1430,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="https://www.instagram.com/metodop4/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://www.linkedin.com/company/m%C3%A9todo-p4/posts/?feedView=all" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
             <a href="https://www.youtube.com/@gabriel_pim" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-            <a href="https://wa.me/5519997258140" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
           </div>
         </div>
 
@@ -1451,12 +1450,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </footer>
-
-
-<!-- ═══ WHATSAPP ═══ -->
-<a href="https://wa.me/5519997258140?text=Ol%C3%A1!%20Vim%20pelo%20site%20do%20Diagn%C3%B3stico%20Completo%20de%20Conta%20do%20M%C3%A9todo%20P4%20e%20gostaria%20de%20agendar%20minha%20an%C3%A1lise." class="wa-btn" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-  <i class="fab fa-whatsapp"></i>
-</a>
 
 
 <!-- ═══ MODAL ═══ -->
@@ -1754,7 +1747,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var hasOutros  = canais.indexOf('outros') !== -1;
     var qualified  = highBudget && !hasOutros;
     var mqlTag     = qualified ? 'qualified_lead' : 'lead_disqualified';
-    payload.mql    = mqlTag;
+    payload.mql    = qualified ? 'sim' : 'não';
     const bodyNew  = JSON.stringify(payload);
     const bodyOld  = JSON.stringify(payloadOld);
     window.dataLayer = window.dataLayer || [];
