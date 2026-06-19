@@ -30,7 +30,7 @@ Cole no `<head>` de cada página. Substitua os valores marcados com `[...]`.
 <meta property="og:url"         content="https://[subdominio-ou-path].metodop4.com.br">
 <meta property="og:title"       content="[mesmo do <title>]">
 <meta property="og:description" content="[mesmo do <meta description>]">
-<meta property="og:image"       content="https://[subdominio-ou-path].metodop4.com.br/assets/og-image.png">
+<meta property="og:image"       content="https://[subdominio-ou-path].metodop4.com.br/assets/logo-p4-nav.png">
 <meta property="og:image:width"  content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale"      content="pt_BR">
@@ -40,7 +40,7 @@ Cole no `<head>` de cada página. Substitua os valores marcados com `[...]`.
 <meta name="twitter:card"        content="summary_large_image">
 <meta name="twitter:title"       content="[mesmo do <title>]">
 <meta name="twitter:description" content="[mesmo do <meta description>]">
-<meta name="twitter:image"       content="https://[subdominio-ou-path].metodop4.com.br/assets/og-image.png">
+<meta name="twitter:image"       content="https://[subdominio-ou-path].metodop4.com.br/assets/logo-p4-nav.png">
 
 <!-- ── Favicons ── -->
 <link rel="icon" type="image/png" href="assets/favicon.png">
@@ -141,7 +141,7 @@ h1 — 1 único por página, com a palavra-chave principal
 
 | Uso | Nome do arquivo |
 |---|---|
-| Preview social (OG) | `og-image.png` (1200×630px obrigatório) |
+| Preview social (OG) | usar a logo principal publicada em `assets/` (ex.: `logo-p4-nav.png`) |
 | Hero / fundo de seção | `hero-bg.jpg` ou `hero-bg.png` |
 | Thumbnail de vídeo | `video-thumb-[nome-da-pagina].png` |
 | Logo / marca | `logo-metodop4.png` |
@@ -191,7 +191,7 @@ Sitemap: https://[subdominio-ou-path].metodop4.com.br/sitemap.xml
 - [ ] `<meta description>` entre 120–155 chars com proposta de valor
 - [ ] `<link rel="canonical">` apontando para o domínio exato em produção
 - [ ] OG tags: `og:url`, `og:title`, `og:description`, `og:image` todos preenchidos
-- [ ] `og:image` → arquivo `assets/og-image.png` existente (1200×630px)
+- [ ] `og:image` → arquivo de logo existente em `assets/` e acessível em produção
 - [ ] Twitter tags preenchidas (copiar dos OG)
 - [ ] Schema.org `Service` com URL correta
 - [ ] Schema.org `FAQPage` se houver seção de perguntas
@@ -245,7 +245,7 @@ Preciso implementar o padrão SEO completo da empresa.
 - YouTube: https://www.youtube.com/@gabriel_pim
 
 ## Regras obrigatórias
-- og:image aponta para https://[url]/assets/og-image.png (1200×630px)
+- og:image aponta para a URL pública do arquivo de logo usado no projeto
 - Canonical = URL exata de produção (sem barra no final)
 - Title nunca repete "Método P4" no início
 - Sem meta keywords duplicadas

@@ -73,7 +73,6 @@
 
 ### Problemas identificados (não críticos / ação pendente)
 
-- `assets/og-image.png` não existe — compartilhamentos em redes sociais não terão preview. Criar uma imagem 1200×630px e salvar nesse caminho.
 - `assets/hero-bg.png` e `assets/especialistas-bg.png` precisam ser criados/colocados em `assets/`.
 - `public/robots.txt` criado: `Allow: /` + referência ao sitemap.
 - `public/sitemap.xml` criado com a URL canônica e `priority: 1.0`. Serão copiados para `dist/` no build do Vite.
